@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/02 13:19:41 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/02 16:38:09 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,47 @@ void sigquit_handler2(int signo)
 	rl_on_new_line();
 }
 
+int	open_redirect(char **args, int i, int file)
+{
+	char	*token;
+	char	*temp;
+
+	token = is_token(token, args[i]);
+	if (!token+1)
+	{
+		file = open(args[i+1], O_RDONLY);
+		if (file > 0)
+			return (-1);
+	}
+	else
+	{
+		temp = ft_strdup(token+1);
+		if (!temp)
+			return (-1);
+		file = open(temp, O_RDONLY);
+		free(temp);
+		if (file > 0)
+			return (-1);
+	}
+	return (file);
+}
+
+int	redirect_in(char **args, int i)
+{
+	int	file;
+	open_redirect(args, i, file);
+	dup2(file, 0);
+	return (0);
+}
+
+int	redirect_out(char **args, int i)
+{
+	int	file;
+	open_redirect(args, i, file);
+	dup2(file, 1);
+	return (0);
+}
+
 int main(int argc, char **argv, char **env)
 {
 	char	*input;
@@ -170,7 +211,7 @@ int main(int argc, char **argv, char **env)
 	char	*all_cmd;
 	t_list	*token;
 	int		i;
-	
+
 	(void)argc;
 	(void)argv;
 	signal(SIGQUIT, SIG_IGN);
@@ -210,9 +251,9 @@ int main(int argc, char **argv, char **env)
 				if (ft_strncmp(is_token(token, args[i]), "|", 3))
 					pipex(...);
 				else if (ft_strncmp(is_token(token, args[i]), "<", 3))
-					redirect_in(...);
+					redirect_in(args, i);
 				else if (ft_strncmp(is_token(token, args[i]), ">", 3))
-					redirect_out(...);
+					redirect_out(args, i);
 				else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
 					jsp(...);
 				else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
