@@ -36,24 +36,19 @@ int init_token(t_list *list)
 	return (0);
 }
 
-/*char	*is_token(t_list *list, char *token)
+char	*is_token(t_list *list, char *token)
 {
 	t_list	*temp;
-	int		i;
 
-	
-	while (i > 0)
-	{	
-		temp = list;
-		while (temp)
-		{
-			if (ft_strstr(token, temp->content, ft_strlen(temp->content)))
-				return (ft_strstr(token, temp->content, ft_strlen(temp->content)));
-			temp = temp->next;
-		}
+	temp = list;
+	while (temp)
+	{
+		if (ft_strnstr(token, temp->content, ft_strlen(temp->content)))
+			return (ft_strnstr(token, temp->content, ft_strlen(temp->content)));
+		temp = temp->next;
 	}
 	return (NULL);
-}*/
+}
 
 char    *get_user_dir(char **env)
 {
@@ -137,7 +132,7 @@ void	builtin_pwd(void)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_putendl_fd(cwd, 1);
 	else
-		ft_putstr_fd("pwd", 2);
+		ft_putstr_fd("pwd error", 2);
 }
 
 int	builtin_echo(char **args)
@@ -208,46 +203,55 @@ void sigquit_handler2(int signo)
 	rl_on_new_line();
 }
 
-/*int	open_redirect(char **args, int i, int file)
+int	open_redirect(char **args, int i, int *file, t_list *list)
 {
 	char	*token;
 	char	*temp;
 
-	token = is_token(token, args[i]);
-	if (!token+1)
+	token = is_token(list, args[i]);
+	if (token)
 	{
-		file = open(args[i+1], O_RDONLY);
-		if (file > 0)
-			return (-1);
+		if (*(token + 1) == ' ')
+		{
+			*file = open(args[i+1], O_RDONLY);
+			if (*file > 0)
+				return (-1);
+		}
+		else
+		{
+			temp = ft_strdup(token + 1);
+			if (!temp)
+				return (-1);
+			*file = open(temp, O_RDONLY);
+			free(temp);
+			if (*file > 0)
+				return (-1);
+		}
 	}
-	else
-	{
-		temp = ft_strdup(token+1);
-		if (!temp)
-			return (-1);
-		file = open(temp, O_RDONLY);
-		free(temp);
-		if (file > 0)
-			return (-1);
-	}
-	return (file);
+	return (*file);
 }
 
-int	redirect_in(char **args, int i)
+int	redirect_in(char **args, int i, t_list *list)
 {
 	int	file;
-	open_redirect(args, i, file);
+
+	file = -1;
+	if (open_redirect(args, i, &file, list) == -1)
+		return (ft_putstr_fd("Redirect in error", 2), 1);
 	dup2(file, 0);
 	return (0);
 }
 
-int	redirect_out(char **args, int i)
+int	redirect_out(char **args, int i, t_list *list)
 {
 	int	file;
-	open_redirect(args, i, file);
+
+	file = -1;
+	if (open_redirect(args, i, &file, list) == -1)
+		return (ft_putstr_fd("Redirect out error", 2), 1);
 	dup2(file, 1);
 	return (0);
-}*/
+}
 
 int main(int argc, char **argv, char **env)
 {
@@ -298,23 +302,23 @@ int main(int argc, char **argv, char **env)
 		else if (args[0])
 		{
 			i = 0;
-			/*while (args[i])
+			while (args[i])
 			{
 				if(is_token(token, args[i]))
 				{
-					if (ft_strncmp(is_token(token, args[i]), "|", 3))
-						pipex(...);
-					else if (ft_strncmp(is_token(token, args[i]), "<", 3))
-						redirect_in(args, i);
+					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
+						pipex(...);*/
+					if (ft_strncmp(is_token(token, args[i]), "<", 3))
+						redirect_in(args, i, token);
 					else if (ft_strncmp(is_token(token, args[i]), ">", 3))
-						redirect_out(args, i);
-					else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
+						redirect_out(args, i, token);
+					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
 						jsp(...);
 					else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
-						redirect_out_append(...);
+						redirect_out_append(...);*/
 				}
 				i++;
-			}*/
+			}
 			pid = fork();
 			if (pid == 0)
 			{
@@ -323,7 +327,7 @@ int main(int argc, char **argv, char **env)
 				signal(SIGQUIT, SIG_DFL);
 				if (execve(all_cmd, cmd, env) == -1)
 				{
-					ft_putstr_fd("exec error", 2);
+					ft_putstr_fd("exec error\n", 2);
 					return (1);
 				}
 			}
