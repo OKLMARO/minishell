@@ -6,11 +6,24 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/02 16:38:09 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/11 16:19:44 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_double(char **tab_str)
+{
+	int	i;
+
+	i = 0;
+	while (tab_str[i])
+	{
+		free(tab_str[i]);
+		i++;
+	}
+	free(tab_str);
+}
 
 int init_token(t_list *list)
 {
@@ -23,7 +36,7 @@ int init_token(t_list *list)
 	return (0);
 }
 
-char	*is_token(t_list *list, char *token)
+/*char	*is_token(t_list *list, char *token)
 {
 	t_list	*temp;
 	int		i;
@@ -40,7 +53,7 @@ char	*is_token(t_list *list, char *token)
 		}
 	}
 	return (NULL);
-}
+}*/
 
 char    *get_user_dir(char **env)
 {
@@ -117,6 +130,41 @@ int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path)
 	return (1);
 }
 
+void	builtin_pwd(void)
+{
+	char	cwd[4096];
+
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		ft_putendl_fd(cwd, 1);
+	else
+		ft_putstr_fd("pwd", 2);
+}
+
+int	builtin_echo(char **args)
+{
+	int	i;
+	int	newline;
+
+	i = 1;
+	newline = 1;
+	if (args[i] && ft_strncmp(args[i], "-n", ft_strlen(args[i])) == 0)
+	{
+		newline = 0;
+		i++;
+	}
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+
+	if (newline)
+		ft_putendl_fd("", 1);
+	return 0;
+}
+
 int builtin_cd(char **args, char **env)
 {
 	if (!args[1])
@@ -160,7 +208,7 @@ void sigquit_handler2(int signo)
 	rl_on_new_line();
 }
 
-int	open_redirect(char **args, int i, int file)
+/*int	open_redirect(char **args, int i, int file)
 {
 	char	*token;
 	char	*temp;
@@ -199,7 +247,7 @@ int	redirect_out(char **args, int i)
 	open_redirect(args, i, file);
 	dup2(file, 1);
 	return (0);
-}
+}*/
 
 int main(int argc, char **argv, char **env)
 {
@@ -238,55 +286,63 @@ int main(int argc, char **argv, char **env)
 		if (*input)
 			add_history(input);
 		args = ft_split(input, ' ');
-		if (args[0] && ft_strncmp(args[0], "cd", 3) == 0)
+		if (args[0] && ft_strncmp(input, "pwd", 4) == 0)
+			builtin_pwd();
+		else if (args[0] && ft_strncmp(args[0], "cd", 3) == 0)
 		{
 			if (builtin_cd(args, env) == -1)
 				return (1);
 		}
-		i = 0;
-		while (args[i])
+		else if (args[0] && ft_strncmp(input, "echo", 5) == 0)
+			builtin_echo(args);
+		else if (args[0])
 		{
-			if(is_token(token, args[i]))
+			i = 0;
+			/*while (args[i])
 			{
-				if (ft_strncmp(is_token(token, args[i]), "|", 3))
-					pipex(...);
-				else if (ft_strncmp(is_token(token, args[i]), "<", 3))
-					redirect_in(args, i);
-				else if (ft_strncmp(is_token(token, args[i]), ">", 3))
-					redirect_out(args, i);
-				else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
-					jsp(...);
-				else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
-					redirect_out_append(...);
+				if(is_token(token, args[i]))
+				{
+					if (ft_strncmp(is_token(token, args[i]), "|", 3))
+						pipex(...);
+					else if (ft_strncmp(is_token(token, args[i]), "<", 3))
+						redirect_in(args, i);
+					else if (ft_strncmp(is_token(token, args[i]), ">", 3))
+						redirect_out(args, i);
+					else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
+						jsp(...);
+					else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
+						redirect_out_append(...);
+				}
+				i++;
+			}*/
+			pid = fork();
+			if (pid == 0)
+			{
+				make_storage(&cmd, input, &all_cmd, path);
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, SIG_DFL);
+				if (execve(all_cmd, cmd, env) == -1)
+				{
+					ft_putstr_fd("exec error", 2);
+					return (1);
+				}
 			}
-			i++;
-		}
-		pid = fork();
-		if (pid == 0)
-		{
-			make_storage(&cmd, input, &all_cmd, path);
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			if (execve(all_cmd, cmd, env) == -1)
+			else if (pid > 0)
 			{
-				ft_putstr_fd("exec error", 2);
+				signal(SIGQUIT, sigquit_handler2);
+				signal(SIGINT, sigint_handler2);
+				waitpid(pid, NULL, 0);
+				signal(SIGQUIT, SIG_IGN);
+				signal(SIGINT, sigint_handler);
+			}
+			else
+			{
+				ft_putstr_fd("fork error", 2);
 				return (1);
 			}
 		}
-		else if (pid > 0)
-		{
-			signal(SIGQUIT, sigquit_handler2);
-			signal(SIGINT, sigint_handler2);
-			waitpid(pid, NULL, 0);
-			signal(SIGQUIT, SIG_IGN);
-			signal(SIGINT, sigint_handler);
-		}
-		else
-		{
-			ft_putstr_fd("fork error", 2);
-			return (1);
-		}
 		free(input);
+		free_double(args);
 	}
 	return (0);
 }
