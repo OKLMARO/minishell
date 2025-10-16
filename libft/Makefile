@@ -37,18 +37,18 @@ CFLAGS = -Wall -Wextra -Werror -g3
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@ar rcs $(NAME) $(OBJS)
+	ar rcs $(NAME) $(OBJS)
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 bonus: $(OBJS_bonus) $(OBJS)
-	@ar rcs $(NAME) $(OBJS_bonus) $(OBJS)
+	ar rcs $(NAME) $(OBJS_bonus) $(OBJS)
 
 clean:
-	@$(RM) $(OBJS) $(OBJS_bonus)
+	$(RM) $(OBJS) $(OBJS_bonus)
 
 fclean: clean
-	@$(RM) $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all

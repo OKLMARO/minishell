@@ -25,16 +25,16 @@ void	free_double(char **tab_str)
 	free(tab_str);
 }
 
-int init_token(t_list *list)
+int init_token(t_list **list)
 {
-	ft_lstadd_front(&list, ft_lstnew("<"));
-	ft_lstadd_front(&list, ft_lstnew(">"));
-	ft_lstadd_front(&list, ft_lstnew("<<"));
-	ft_lstadd_front(&list, ft_lstnew(">>"));
-	ft_lstadd_front(&list, ft_lstnew("|"));
-	ft_lstadd_front(&list, ft_lstnew("$"));
-	ft_lstadd_front(&list, ft_lstnew("\""));
-	ft_lstadd_front(&list, ft_lstnew("'"));
+	ft_lstadd_front(list, ft_lstnew("<"));
+	ft_lstadd_front(list, ft_lstnew(">"));
+	ft_lstadd_front(list, ft_lstnew("<<"));
+	ft_lstadd_front(list, ft_lstnew(">>"));
+	ft_lstadd_front(list, ft_lstnew("|"));
+	ft_lstadd_front(list, ft_lstnew("$"));
+	ft_lstadd_front(list, ft_lstnew("\""));
+	ft_lstadd_front(list, ft_lstnew("'"));
 	return (0);
 }
 
@@ -45,8 +45,8 @@ char	*is_token(t_list *list, char *token)
 	temp = list;
 	while (temp)
 	{
-		if (ft_strnstr(token, temp->content, ft_strlen(temp->content)))
-			return (ft_strnstr(token, temp->content, ft_strlen(temp->content)));
+		if (ft_strnstr(token, temp->content, 3))
+			return (ft_strnstr(token, temp->content, 3));
 		temp = temp->next;
 	}
 	return (NULL);
@@ -352,7 +352,8 @@ int main()
 	return (0);*/
 
 	t_list *temp = NULL;
-	init_token(temp);
+	temp = malloc(sizeof(t_list));
+	init_token(&temp);
 	ft_putstr_fd(is_token(temp, "b<>jr><"), 1);
 	return (0);
 }
