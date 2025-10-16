@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/11 16:19:44 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/16 20:55:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int init_token(t_list *list)
 	ft_lstadd_front(&list, ft_lstnew(">>"));
 	ft_lstadd_front(&list, ft_lstnew("|"));
 	ft_lstadd_front(&list, ft_lstnew("$"));
+	ft_lstadd_front(&list, ft_lstnew("\""));
+	ft_lstadd_front(&list, ft_lstnew("'"));
 	return (0);
 }
 
@@ -154,7 +156,6 @@ int	builtin_echo(char **args)
 			ft_putstr_fd(" ", 1);
 		i++;
 	}
-
 	if (newline)
 		ft_putendl_fd("", 1);
 	return 0;
@@ -253,9 +254,9 @@ int	redirect_out(char **args, int i, t_list *list)
 	return (0);
 }
 
-int main(int argc, char **argv, char **env)
+int main()
 {
-	char	*input;
+	/*char	*input;
 	pid_t	pid;
 	char	**args;
 	char	**path;
@@ -304,19 +305,19 @@ int main(int argc, char **argv, char **env)
 			i = 0;
 			while (args[i])
 			{
-				if(is_token(token, args[i]))
-				{
+				if (is_token(token, args[i]))
+				{*/
 					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
 						pipex(...);*/
-					if (ft_strncmp(is_token(token, args[i]), "<", 3))
+					/*if (ft_strncmp(is_token(token, args[i]), "<", 3))
 						redirect_in(args, i, token);
 					else if (ft_strncmp(is_token(token, args[i]), ">", 3))
-						redirect_out(args, i, token);
+						redirect_out(args, i, token);*/
 					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
 						jsp(...);
 					else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
 						redirect_out_append(...);*/
-				}
+				/*}
 				i++;
 			}
 			pid = fork();
@@ -348,5 +349,10 @@ int main(int argc, char **argv, char **env)
 		free(input);
 		free_double(args);
 	}
+	return (0);*/
+
+	t_list *temp = NULL;
+	init_token(temp);
+	ft_putstr_fd(is_token(temp, "b<>jr><"), 1);
 	return (0);
 }
