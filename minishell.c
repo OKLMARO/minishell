@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/16 20:55:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/18 10:46:47 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,46 @@ int init_token(t_list **list)
 	return (0);
 }
 
+char	*find_first_adr(char *res[])
+{
+	char	*min;
+	int		i;
+
+	i = 0;
+	min = NULL;
+	while (res[i])
+	{
+		if (min == NULL || min > res[i])
+		{
+			min = res[i];
+			i++;
+		}
+	}
+	return (min);
+}
+
 char	*is_token(t_list *list, char *token)
 {
+	char	*res[ft_lstsize(list)];
 	t_list	*temp;
+	int		i;
 
 	temp = list;
+	i = 0;
 	while (temp)
 	{
 		if (ft_strnstr(token, temp->content, 3))
-			return (ft_strnstr(token, temp->content, 3));
+		{
+			res[i] = ft_strnstr(token, temp->content, 3);
+			i++;
+		}
 		temp = temp->next;
 	}
-	return (NULL);
+	if (i == 0)
+		return (NULL);
+	if (i == 1)
+		return (res[0]);
+	return (find_first_adr(res));
 }
 
 char    *get_user_dir(char **env)
@@ -254,9 +282,9 @@ int	redirect_out(char **args, int i, t_list *list)
 	return (0);
 }
 
-int main()
+int main(int argc, char **argv, char **env)
 {
-	/*char	*input;
+	char	*input;
 	pid_t	pid;
 	char	**args;
 	char	**path;
@@ -270,7 +298,7 @@ int main()
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_handler);
 	token = malloc(sizeof(t_list));
-	init_token(token);
+	init_token(&token);
 	path = get_path(env);
 	if (!path)
 		return (ft_putstr_fd("Env error", 2), 2);
@@ -306,18 +334,18 @@ int main()
 			while (args[i])
 			{
 				if (is_token(token, args[i]))
-				{*/
+				{
 					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
 						pipex(...);*/
-					/*if (ft_strncmp(is_token(token, args[i]), "<", 3))
+					if (ft_strncmp(is_token(token, args[i]), "<", 3))
 						redirect_in(args, i, token);
 					else if (ft_strncmp(is_token(token, args[i]), ">", 3))
-						redirect_out(args, i, token);*/
+						redirect_out(args, i, token);
 					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
 						jsp(...);
 					else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
 						redirect_out_append(...);*/
-				/*}
+				}
 				i++;
 			}
 			pid = fork();
@@ -349,11 +377,5 @@ int main()
 		free(input);
 		free_double(args);
 	}
-	return (0);*/
-
-	t_list *temp = NULL;
-	temp = malloc(sizeof(t_list));
-	init_token(&temp);
-	ft_putstr_fd(is_token(temp, "b<>jr><"), 1);
 	return (0);
 }

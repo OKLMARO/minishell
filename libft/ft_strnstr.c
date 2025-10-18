@@ -32,7 +32,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	init(&i, &j, &to_find_len, temp_find);
 	if (temp_find && temp_find[0] == '\0')
 		return (temp_str);
-	while (temp_str[i] != '\0' && i < len)
+	while (temp_find && temp_str && temp_str[i] != '\0' && i < len)
 	{
 		while (temp_str[i + j] == temp_find[j] && temp_str[i + j] != '\0')
 		{
