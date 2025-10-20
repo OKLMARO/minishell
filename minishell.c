@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/18 17:13:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/20 12:14:48 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,13 +232,14 @@ void sigquit_handler2(int signo)
 	rl_on_new_line();
 }
 
-int	open_redirect_out(char **args, int i, int *file)
+int	open_redirect_out(char **args, int i, int *file, t_list *list)
 {
 	char	*token;
 	char	*temp;
 
-	token = ft_strnstr(args[i], ">", 2);
-	if (!(token + 1))
+	token = is_token(list, args[i]);
+	printf("je suis dans le in token : %p\n", token);
+	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_WRONLY | O_TRUNC);
 		if (*file > 0)
@@ -257,13 +258,14 @@ int	open_redirect_out(char **args, int i, int *file)
 	return (*file);
 }
 
-int	open_redirect_in(char **args, int i, int *file)
+int	open_redirect_in(char **args, int i, int *file, t_list *list)
 {
 	char	*token;
 	char	*temp;
 
-	token = ft_strnstr(args[i], "<", 2);
-	if (!(token + 1))
+	token = is_token(list, args[i]);
+	printf("je suis dans le in token : %p\n", token);
+	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_RDONLY);
 		if (*file > 0)
@@ -282,23 +284,23 @@ int	open_redirect_in(char **args, int i, int *file)
 	return (*file);
 }
 
-int	redirect_in(char **args, int i)
+int	redirect_in(char **args, int i, t_list *list)
 {
 	int	file;
 
 	file = -1;
-	if (open_redirect_in(args, i, &file) == -1)
+	if (open_redirect_in(args, i, &file, list) == -1)
 		return (ft_putendl_fd("Redirect in error\n", 2), 1);
 	dup2(file, 0);
 	return (0);
 }
 
-int	redirect_out(char **args, int i)
+int	redirect_out(char **args, int i, t_list *list)
 {
 	int	file;
 
 	file = -1;
-	if (open_redirect_out(args, i, &file) == -1)
+	if (open_redirect_out(args, i, &file, list) == -1)
 		return (ft_putstr_fd("Redirect out error\n", 2), 1);
 	dup2(file, 1);
 	return (0);
@@ -359,16 +361,18 @@ int main(int argc, char **argv, char **env)
 				{
 					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
 						pipex(...);*/
-					if (ft_strncmp(is_token(token, args[i]), "<", 3))
+					if (ft_strncmp(is_token(token, args[i]), "<", 1))
 					{
-						if (redirect_in(args, i) == 1)
+						if (redirect_in(args, i, token) == 1)
 							break;
+						printf("redirect in execute bien\n");
 						i++;
 					}
-					else if (ft_strncmp(is_token(token, args[i]), ">", 3))
+					else if (ft_strncmp(is_token(token, args[i]), ">", 1))
 					{
-						if (redirect_out(args, i) == 1)
+						if (redirect_out(args, i, token) == 1)
 							break;
+						printf("redirect out execute bien\n");
 						i++;
 					}
 					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
