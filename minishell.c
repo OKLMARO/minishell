@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/20 12:14:48 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/21 09:18:02 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,7 +238,7 @@ int	open_redirect_out(char **args, int i, int *file, t_list *list)
 	char	*temp;
 
 	token = is_token(list, args[i]);
-	printf("je suis dans le in token : %p\n", token);
+	printf("je suis dans le out token : %p\n", token);
 	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_WRONLY | O_TRUNC);
