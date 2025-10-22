@@ -238,11 +238,11 @@ int	open_redirect_out(char **args, int i, int *file, t_list *list)
 	char	*temp;
 
 	token = is_token(list, args[i]);
-	printf("je suis dans le out token : %p\n", token);
+	printf("je suis dans le out token : %s\n", token);
 	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_WRONLY | O_TRUNC);
-		if (*file > 0)
+		if (*file < 0)
 			return (-1);
 	}
 	else
@@ -252,7 +252,7 @@ int	open_redirect_out(char **args, int i, int *file, t_list *list)
 			return (-1);
 		*file = open(temp, O_WRONLY | O_TRUNC);
 		free(temp);
-		if (*file > 0)
+		if (*file < 0)
 			return (-1);
 	}
 	return (*file);
@@ -264,11 +264,12 @@ int	open_redirect_in(char **args, int i, int *file, t_list *list)
 	char	*temp;
 
 	token = is_token(list, args[i]);
-	printf("je suis dans le in token : %p\n", token);
+	
+	printf("je suis dans le in token : %s\n", token);
 	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_RDONLY);
-		if (*file > 0)
+		if (*file < 0)
 			return (-1);
 	}
 	else
@@ -278,7 +279,7 @@ int	open_redirect_in(char **args, int i, int *file, t_list *list)
 			return (-1);
 		*file = open(temp, O_RDONLY);
 		free(temp);
-		if (*file > 0)
+		if (*file < 0)
 			return (-1);
 	}
 	return (*file);
@@ -287,6 +288,7 @@ int	open_redirect_in(char **args, int i, int *file, t_list *list)
 int	redirect_in(char **args, int i, t_list *list)
 {
 	int	file;
+
 
 	file = -1;
 	if (open_redirect_in(args, i, &file, list) == -1)
@@ -361,19 +363,17 @@ int main(int argc, char **argv, char **env)
 				{
 					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
 						pipex(...);*/
-					if (ft_strncmp(is_token(token, args[i]), "<", 1))
+					if (ft_strncmp(is_token(token, args[i]), "<", 1) == 0)
 					{
 						if (redirect_in(args, i, token) == 1)
 							break;
 						printf("redirect in execute bien\n");
-						i++;
 					}
-					else if (ft_strncmp(is_token(token, args[i]), ">", 1))
+					else if (ft_strncmp(is_token(token, args[i]), ">", 1) == 0)
 					{
 						if (redirect_out(args, i, token) == 1)
 							break;
 						printf("redirect out execute bien\n");
-						i++;
 					}
 					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
 						jsp(...);
