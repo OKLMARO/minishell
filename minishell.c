@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/10/21 09:18:02 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/10/25 15:37:44 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,10 +238,9 @@ int	open_redirect_out(char **args, int i, int *file, t_list *list)
 	char	*temp;
 
 	token = is_token(list, args[i]);
-	printf("je suis dans le out token : %s\n", token);
 	if (ft_strlen(token) == 1)
 	{
-		*file = open(args[i + 1], O_WRONLY | O_TRUNC);
+		*file = open(args[i + 1], O_WRONLY | O_TRUNC | O_CREAT, 0777);
 		if (*file < 0)
 			return (-1);
 	}
@@ -287,11 +286,10 @@ int	redirect_in(char **args, int i, t_list *list)
 {
 	int	file;
 
-
 	file = -1;
 	if (open_redirect_in(args, i, &file, list) == -1)
 		return (ft_putendl_fd("Redirect in error\n", 2), 1);
-	dup2(0, file);
+	dup2(file, 0);
 	return (0);
 }
 
@@ -302,7 +300,7 @@ int	redirect_out(char **args, int i, t_list *list)
 	file = -1;
 	if (open_redirect_out(args, i, &file, list) == -1)
 		return (ft_putstr_fd("Redirect out error\n", 2), 1);
-	dup2(1, file);
+	dup2(file, 1);
 	return (0);
 }
 
@@ -343,6 +341,30 @@ int main(int argc, char **argv, char **env)
 		if (*input)
 			add_history(input);
 		args = ft_split(input, ' ');
+		i = 0;
+		while (args[i])
+		{
+			if (is_token(token, args[i]))
+			{
+				/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
+					pipex(...);*/
+				if (ft_strncmp(is_token(token, args[i]), "<", 1) == 0)
+				{
+					if (redirect_in(args, i, token) == 1)
+						break;
+				}
+				else if (ft_strncmp(is_token(token, args[i]), ">", 1) == 0)
+				{
+					if (redirect_out(args, i, token) == 1)
+						break;
+				}
+				/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
+					jsp(...);
+				else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
+					redirect_out_append(...);*/
+			}
+			i++;
+		}
 		if (args[0] && ft_strncmp(input, "pwd", 4) == 0)
 			builtin_pwd();
 		else if (args[0] && ft_strncmp(args[0], "cd", 3) == 0)
@@ -354,32 +376,6 @@ int main(int argc, char **argv, char **env)
 			builtin_echo(args);
 		else if (args[0])
 		{
-			i = 0;
-			while (args[i])
-			{
-				if (is_token(token, args[i]))
-				{
-					/*if (ft_strncmp(is_token(token, args[i]), "|", 3))
-						pipex(...);*/
-					if (ft_strncmp(is_token(token, args[i]), "<", 1) == 0)
-					{
-						if (redirect_in(args, i, token) == 1)
-							break;
-						printf("redirect in execute bien\n");
-					}
-					else if (ft_strncmp(is_token(token, args[i]), ">", 1) == 0)
-					{
-						if (redirect_out(args, i, token) == 1)
-							break;
-						printf("redirect out execute bien\n");
-					}
-					/*else if (ft_strncmp(is_token(token, args[i]), "<<", 3))
-						jsp(...);
-					else if (ft_strncmp(is_token(token, args[i]), ">>", 3))
-						redirect_out_append(...);*/
-				}
-				i++;
-			}
 			pid = fork();
 			if (pid == 0)
 			{
