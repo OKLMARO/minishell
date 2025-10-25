@@ -148,11 +148,11 @@ int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path)
 {
 	*cmd = ft_split(argv, ' ');
 	if (!*cmd)
-		return (perror("Malloc crash"), 0);
+		return (perror("Malloc crash"), 1);
 	*all_cmd = valid_command(*cmd[0], path);
 	if (!*all_cmd)
-		return (perror("Commande introuvable ou non executable"), 2);
-	return (1);
+		return (perror("Commande introuvable ou non executable"), 1);
+	return (0);
 }
 
 void	builtin_pwd(void)
@@ -264,8 +264,6 @@ int	open_redirect_in(char **args, int i, int *file, t_list *list)
 	char	*temp;
 
 	token = is_token(list, args[i]);
-	
-	printf("je suis dans le in token : %s\n", token);
 	if (ft_strlen(token) == 1)
 	{
 		*file = open(args[i + 1], O_RDONLY);
@@ -293,7 +291,7 @@ int	redirect_in(char **args, int i, t_list *list)
 	file = -1;
 	if (open_redirect_in(args, i, &file, list) == -1)
 		return (ft_putendl_fd("Redirect in error\n", 2), 1);
-	dup2(file, 0);
+	dup2(0, file);
 	return (0);
 }
 
@@ -304,7 +302,7 @@ int	redirect_out(char **args, int i, t_list *list)
 	file = -1;
 	if (open_redirect_out(args, i, &file, list) == -1)
 		return (ft_putstr_fd("Redirect out error\n", 2), 1);
-	dup2(file, 1);
+	dup2(1, file);
 	return (0);
 }
 
@@ -385,13 +383,15 @@ int main(int argc, char **argv, char **env)
 			pid = fork();
 			if (pid == 0)
 			{
-				make_storage(&cmd, input, &all_cmd, path);
-				signal(SIGINT, SIG_DFL);
-				signal(SIGQUIT, SIG_DFL);
-				if (execve(all_cmd, cmd, env) == -1)
+				if (!make_storage(&cmd, input, &all_cmd, path))
 				{
-					ft_putstr_fd("exec error\n", 2);
-					return (1);
+					signal(SIGINT, SIG_DFL);
+					signal(SIGQUIT, SIG_DFL);
+					if (execve(all_cmd, cmd, env) == -1)
+					{
+						ft_putstr_fd("exec error\n", 2);
+						return (1);
+					}
 				}
 			}
 			else if (pid > 0)
