@@ -4,7 +4,7 @@ CC		= cc
 
 CFLAGS	= -Wall -Wextra -Werror -g3
 
-SRCS	= src/*
+SRCS	= src/builtin.c src/env.c src/exec.c src/fd.c src/lexer.c src/minishell.c src/utils.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -13,18 +13,18 @@ LIBFT 	= include/libft/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(MAKE) -C libft bonus
+	$(MAKE) -C include/libft bonus
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) include/libft/libft.a -lreadline
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(MAKE) -C libft clean
+	$(MAKE) -C include/libft clean
 	rm -f $(OBJS)
 
 fclean: clean
-	$(MAKE) -C libft fclean
+	$(MAKE) -C include/libft fclean
 	rm -f $(NAME)
 
 re: fclean all
