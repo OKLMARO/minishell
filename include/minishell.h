@@ -12,6 +12,22 @@
 # include <sys/wait.h>
 # include "libft/libft.h"
 
+typedef enum {
+	REDIRECT_OUT,
+	REDIRECT_IN,
+	HERE_DOC,
+	APPEND,
+	WORD,
+	PIPE
+}	t_token_type;
+
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*type;
+	t_token			*next;
+}					t_token;
+
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		init_token(t_list **list);
