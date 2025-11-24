@@ -10,6 +10,7 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <stdbool.h>
 # include "libft/libft.h"
 
 typedef enum {
@@ -24,8 +25,10 @@ typedef enum {
 typedef struct s_token
 {
 	t_token_type	type;
-	char			*type;
+	char			*content;
 	t_token			*next;
+	bool			in_single_quote;
+	bool			in_double_quote;
 }					t_token;
 
 void	ft_putstr_fd(char *s, int fd);
