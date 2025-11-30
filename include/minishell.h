@@ -18,6 +18,9 @@ typedef enum {
 	REDIRECT_IN,
 	HERE_DOC,
 	APPEND,
+	DOLLAR,
+	SINGLE,
+	DOUBLE,
 	WORD,
 	PIPE
 }	t_token_type;
@@ -27,8 +30,6 @@ typedef struct s_token
 	t_token_type	type;
 	char			*content;
 	t_token			*next;
-	bool			in_single_quote;
-	bool			in_double_quote;
 }					t_token;
 
 void	ft_putstr_fd(char *s, int fd);
@@ -49,5 +50,9 @@ int		open_redirect_out(char **args, int i, int *file, t_list *list);
 int		open_redirect_in(char **args, int i, int *file, t_list *list);
 int		redirect_in(char **args, int i, t_list *list);
 int		redirect_out(char **args, int i, t_list *list);
+void	ft_tokenadd_back(t_token **lst, t_token *new);
+t_token	*ft_tokennew(t_token_type type, void *s);
+t_token	*lexer_word(t_token_type type, t_token *list, char buffer[4096]);
+t_token	*lexer(char *input);
 
 #endif
