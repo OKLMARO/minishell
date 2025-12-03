@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/03 16:26:24 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/03 16:42:48 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ t_token	*lexer(char *input)
 	buffer = malloc(sizeof(char) * 4096);
 	if (!buffer)
 		return (NULL);
+	ft_memset(buffer, '\0', 4096);
 	while (input[i])
 	{
 		if (lexer_compare(input, &list, &i, buffer) == false)
