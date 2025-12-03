@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:52:13 by oamairi           #+#    #+#             */
-/*   Updated: 2025/11/17 11:59:40 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/03 16:28:05 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	free_double(char **tab_str)
 void	sigint_handler(int signo)
 {
 	(void)signo;
-
 	ft_putstr_fd("\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -38,7 +37,6 @@ void	sigint_handler(int signo)
 void	sigint_handler2(int signo)
 {
 	(void)signo;
-
 	ft_putstr_fd("\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -47,7 +45,6 @@ void	sigint_handler2(int signo)
 void	sigquit_handler2(int signo)
 {
 	(void)signo;
-
 	write(1, "Quit (core dumped)", 19);
 	write(1, "\n", 1);
 	rl_replace_line("", 0);

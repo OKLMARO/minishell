@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/11/24 10:51:07 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/03 16:29:17 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int main(int argc, char **argv, char **env)
 			free(input);
 			break;
 		}
-		parsing(input)
 		if (*input)
 			add_history(input);
 		args = ft_split(input, ' ');

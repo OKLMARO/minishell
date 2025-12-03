@@ -29,7 +29,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*content;
-	t_token			*next;
+	struct s_token	*next;
 }					t_token;
 
 void	ft_putstr_fd(char *s, int fd);
@@ -52,7 +52,7 @@ int		redirect_in(char **args, int i, t_list *list);
 int		redirect_out(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 t_token	*ft_tokennew(t_token_type type, void *s);
-t_token	*lexer_word(t_token_type type, t_token *list, char buffer[4096]);
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer);
 t_token	*lexer(char *input);
 
 #endif
