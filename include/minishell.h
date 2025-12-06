@@ -32,6 +32,20 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
+typedef struct s_redirect
+{
+	t_token_type		type;
+	char				*file;
+	struct s_redirect	*next;
+}						t_redirect;
+
+typedef struct s_cmd
+{
+	char			**argv;
+	t_redirect		*redirects;
+	struct s_cmd	*next;
+}					t_cmd;
+
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		init_token(t_list **list);
