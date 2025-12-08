@@ -6,13 +6,13 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/03 16:42:48 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/08 17:03:52 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-t_token	*lexer_word(t_token_type type, t_token **list, char *buffer)
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, bool in_single, bool in_double)
 {
 	t_token	*new;
 
