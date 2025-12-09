@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/08 16:52:05 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/09 13:59:01 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_tokenadd_back(t_token **lst, t_token *new)
 	temp->next = new;
 }
 
-t_token	*ft_tokennew(t_token_type type, void *s, bool in_single, bool in_double)
+t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote)
 {
 	t_token	*new;
 
@@ -42,8 +42,7 @@ t_token	*ft_tokennew(t_token_type type, void *s, bool in_single, bool in_double)
 		return (NULL);
 	new->type = type;
 	new->content = s;
+	new->quote = quote;
 	new->next = NULL;
-	new->in_double = in_double;
-	new->in_single = in_single;
 	return (new);
 }
