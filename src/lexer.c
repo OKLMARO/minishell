@@ -6,14 +6,20 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/09 17:41:10 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/09 22:22:14 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-t_token	*lexer_word(t_token_type type, t_token **list, char *buffer,
-	t_quote_type quote)
+void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i)
+{
+	buffer[*i_buffer] = input[i];
+	*i_buffer = *i_buffer + 1;
+	buffer[*i_buffer] = '\0';
+}
+
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote)
 {
 	t_token	*new;
 
@@ -54,31 +60,40 @@ void	make_lexer(t_token_type type, t_token **list, char *buffer,
 
 bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer)
 {
+	int	i_buffer;
+
 	if (buffer[0] != '\0')
 		lexer_word(WORD, list, buffer, NO_QUOTE);
 	ft_memset(buffer, '\0', 4096);
-	add_to_buffer(buffer, i, input, i);
+	i_buffer = 0;
+	*i = *i + 1;
 	while (input[*i] != '\'' && input[*i])
-		add_to_buffer(buffer, i, input, i);
+	{
+		add_to_buffer(buffer, &i_buffer, input, *i);
+		*i = *i + 1;
+	}
 	if (!input[*i])
-		return (free(input), free(buffer), ft_putstr_fd("unexpected element", 2), false);
-	add_to_buffer(buffer, i, input, i);
+		return (ft_putstr_fd("unexpected element\n", 2), false);
 	return (lexer_word(WORD, list, buffer, SINGLE_QUOTE), true);
 }
 
 bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer)
 {
+	int	i_buffer;
+	
 	if (buffer[0] != '\0')
 		lexer_word(WORD, list, buffer, NO_QUOTE);
 	ft_memset(buffer, '\0', 4096);
-	add_to_buffer(buffer, i, input, *i);
+	i_buffer = 0;
+	*i = *i + 1;
 	while (input[*i] != '"' && input[*i])
-		add_to_buffer(buffer, i, input, *i);
+	{
+		add_to_buffer(buffer, &i_buffer, input, *i);
+		*i = *i + 1;
+	}
 	if (!input[*i])
-		return (free(input), free(buffer), ft_putstr_fd("unexpected element", 2), false);
-	add_to_buffer(buffer, i, input, i);
+		return (ft_putstr_fd("unexpected element\n", 2), false);
 	return (lexer_word(WORD, list, buffer, DOUBLE_QUOTE), true);
-	return (false);
 }
 
 bool	lexer_compare(char *input, t_token **list, int *i, char *buffer)
@@ -108,13 +123,6 @@ bool	lexer_compare(char *input, t_token **list, int *i, char *buffer)
 	else if (input[*i] == ' ')
 		return (make_lexer(WORD, list, buffer, NO_QUOTE), true);
 	return (false);
-}
-
-void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i)
-{
-	buffer[*i_buffer] = input[i];
-	*i_buffer = *i_buffer + 1;
-	buffer[*i_buffer] = '\0';
 }
 
 t_token	*lexer(char *input)

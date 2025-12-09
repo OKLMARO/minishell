@@ -72,7 +72,7 @@ int		redirect_in(char **args, int i, t_list *list);
 int		redirect_out(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);
-t_token	*lexer_word(t_token_type type, t_token **list, char *buffer);
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
 t_token	*lexer(char *input);
 t_cmd	*ft_cmdnew(void);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
