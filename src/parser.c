@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/08 16:07:55 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/10 16:09:12 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,34 @@ void	add_argv_to_cmd(t_cmd *cmd, char *argv)
 	cmd->argv = new_argv;
 }
 
+void	parser_compare(t_token *temp, t_cmd *cmd_list, t_cmd *new)
+{
+	if (temp->type == PIPE)
+	{
+		ft_cmdadd_back(&cmd_list, new);
+		new = NULL;
+		new = malloc(sizeof(t_cmd));
+		if (!new)
+			return (NULL);
+	}
+	else if (temp->type == WORD)
+		add_argv_to_cmd(new, temp->content);
+}
+
 t_cmd	*parser(t_token *token)
 {
 	t_token	*temp;
+	t_cmd	*cmd_list;
 	t_cmd	*new;
 
 	temp = token;
-	while (temp->next != PIPE || temp)
+	new = ft_cmdnew();
+	if (!new)
+		return (NULL);
+	cmd_list = new;
+	while (temp)
 	{
-		new = ft_cmdnew();
-		if (!new)
-			return (NULL);
-		if (temp->type == WORD)
-			add_argv_to_cmd(new, temp->content);
-		
+		parser_compare(temp, cmd_list, new);
+		temp = temp->next;
 	}
 }

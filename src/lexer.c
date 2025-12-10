@@ -6,20 +6,14 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/09 22:22:14 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/10 15:57:11 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i)
-{
-	buffer[*i_buffer] = input[i];
-	*i_buffer = *i_buffer + 1;
-	buffer[*i_buffer] = '\0';
-}
-
-t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote)
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer,
+	t_quote_type quote)
 {
 	t_token	*new;
 
@@ -53,12 +47,10 @@ void	make_lexer(t_token_type type, t_token **list, char *buffer,
 	else if (type == PIPE)
 		(ft_memcpy(buffer, "|", 2), lexer_word(PIPE, list, buffer,
 				NO_QUOTE));
-	else if (type == DOLLAR)
-		(ft_memcpy(buffer, "$", 2), lexer_word(DOLLAR, list, buffer,
-				NO_QUOTE));
 }
 
-bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer)
+bool	make_lexer_single_quote(char *input, t_token **list, int *i,
+	char *buffer)
 {
 	int	i_buffer;
 
@@ -77,10 +69,11 @@ bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer)
 	return (lexer_word(WORD, list, buffer, SINGLE_QUOTE), true);
 }
 
-bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer)
+bool	make_lexer_double_quote(char *input, t_token **list, int *i,
+	char *buffer)
 {
 	int	i_buffer;
-	
+
 	if (buffer[0] != '\0')
 		lexer_word(WORD, list, buffer, NO_QUOTE);
 	ft_memset(buffer, '\0', 4096);
@@ -94,35 +87,6 @@ bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer)
 	if (!input[*i])
 		return (ft_putstr_fd("unexpected element\n", 2), false);
 	return (lexer_word(WORD, list, buffer, DOUBLE_QUOTE), true);
-}
-
-bool	lexer_compare(char *input, t_token **list, int *i, char *buffer)
-{
-	if (input[*i + 1] && input[*i] == '<' && input[*i + 1] == '<')
-	{
-		*i = *i + 1;
-		return (make_lexer(HERE_DOC, list, buffer, NO_QUOTE), true);
-	}
-	else if (input[*i] == '<')
-		return (make_lexer(REDIRECT_IN, list, buffer, NO_QUOTE), true);
-	else if (input[*i + 1] && input[*i] == '>' && input[*i + 1] == '>')
-	{
-		*i = *i + 1;
-		return (make_lexer(APPEND, list, buffer, NO_QUOTE), true);
-	}
-	else if (input[*i] == '>')
-		return (make_lexer(REDIRECT_OUT, list, buffer, NO_QUOTE), true);
-	else if (input[*i] == '|')
-		return (make_lexer(PIPE, list, buffer, NO_QUOTE), true);
-	else if (input[*i] == '$')
-		return (make_lexer(DOLLAR, list, buffer, NO_QUOTE), true);
-	else if (input[*i] == '\'')
-		return (make_lexer_single_quote(input, list, i, buffer), true);
-	else if (input[*i] == '"')
-		return (make_lexer_double_quote(input, list, i, buffer));
-	else if (input[*i] == ' ')
-		return (make_lexer(WORD, list, buffer, NO_QUOTE), true);
-	return (false);
 }
 
 t_token	*lexer(char *input)

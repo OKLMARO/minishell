@@ -18,7 +18,6 @@ typedef enum {
 	REDIRECT_IN,
 	HERE_DOC,
 	APPEND,
-	DOLLAR,
 	WORD,
 	PIPE,
 	NO
@@ -73,6 +72,11 @@ int		redirect_out(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);
 t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
+bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer);
+bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer);
+void	make_lexer(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
+void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i);
+bool	lexer_compare(char *input, t_token **list, int *i, char *buffer);
 t_token	*lexer(char *input);
 t_cmd	*ft_cmdnew(void);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
