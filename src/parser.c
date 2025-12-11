@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/11 12:07:52 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/11 16:19:54 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	add_argv_to_cmd(t_cmd *cmd, char *argv)
 	count = 0;
 	while (cmd->argv && cmd->argv[count])
 		count++;
-	new_argv = malloc(sizeof(char*) * (count + 2));
+	new_argv = malloc(sizeof(char *) * (count + 2));
 	if (!new_argv)
-		return;
+		return ;
 	count = 0;
 	while (cmd->argv && cmd->argv[count])
 	{
@@ -69,23 +69,22 @@ int	parser_compare(t_token *temp, t_cmd **cmd_list, t_cmd **new)
 	return (2);
 }
 
-t_cmd	*parser(t_token *token)
+t_cmd	*parser(t_token *token, int result)
 {
 	t_token	*temp;
-	t_cmd	*cmd_list;
 	t_cmd	*new;
-	int		result;
+	t_cmd *cmd_list;
 
 	temp = token;
+	cmd_list = NULL;
 	new = ft_cmdnew();
 	if (!new)
 		return (NULL);
-	cmd_list = NULL;
 	while (temp)
 	{
 		result = parser_compare(temp, &cmd_list, &new);
-		/*if (result == -1)
-			my_exit();*/
+		if (result == -1)
+			my_exit();
 		else if (result == 0)
 		{
 			new = ft_cmdnew();
@@ -96,6 +95,5 @@ t_cmd	*parser(t_token *token)
 			temp = temp->next;
 		temp = temp->next;
 	}
-	ft_cmdadd_back(&cmd_list, new);
-	return (cmd_list);
+	return (ft_cmdadd_back(&cmd_list, new), cmd_list);
 }

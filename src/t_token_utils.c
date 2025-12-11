@@ -6,11 +6,16 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/09 13:59:01 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/11 16:36:48 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	my_exit(t_cmd *cmd, t_token *token, char *string)
+{
+	
+}
 
 void	ft_tokenadd_front(t_token **lst, t_token *new)
 {
