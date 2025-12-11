@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:24:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/10 16:07:02 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/11 11:17:22 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,21 @@ void	ft_cmdadd_back(t_cmd **lst, t_cmd *new)
 	{
 		ft_cmdadd_front(lst, new);
 		return ;
+	}
+	temp = *lst;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new;
+}
+
+void	ft_redirectadd_back(t_redirect **lst, t_redirect *new)
+{
+	t_cmd	*temp;
+
+	if (!*lst)
+	{
+		new->next = *lst;
+		*lst = new;
 	}
 	temp = *lst;
 	while (temp->next)

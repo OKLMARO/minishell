@@ -19,8 +19,7 @@ typedef enum {
 	HERE_DOC,
 	APPEND,
 	WORD,
-	PIPE,
-	NO
+	PIPE
 }	t_token_type;
 
 typedef enum {
@@ -76,6 +75,7 @@ bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer);
 bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer);
 void	make_lexer(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
 void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i);
+void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 bool	lexer_compare(char *input, t_token **list, int *i, char *buffer);
 t_token	*lexer(char *input);
 t_cmd	*ft_cmdnew(void);

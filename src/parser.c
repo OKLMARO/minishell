@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/10 16:09:12 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/11 12:07:52 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,38 @@ void	add_argv_to_cmd(t_cmd *cmd, char *argv)
 	cmd->argv = new_argv;
 }
 
-void	parser_compare(t_token *temp, t_cmd *cmd_list, t_cmd *new)
+bool	add_redirect_to_cmd(t_token *temp, t_cmd *new)
+{
+	t_redirect	*new_redirect;
+
+	if (!temp->next || temp->next->type != WORD)
+		return (ft_putstr_fd("unexpected element\n", 2), false);
+	new_redirect = malloc(sizeof(t_redirect));
+	if (!new_redirect)
+		return (false);
+	new_redirect->type = temp->type;
+	new_redirect->file = ft_strdup(temp->next->content);
+	if (!new_redirect->file)
+		return (false);
+	new_redirect->next = NULL;
+	ft_redirectadd_back(&new->redirects, new_redirect);
+	return (true);
+}
+
+int	parser_compare(t_token *temp, t_cmd **cmd_list, t_cmd **new)
 {
 	if (temp->type == PIPE)
-	{
-		ft_cmdadd_back(&cmd_list, new);
-		new = NULL;
-		new = malloc(sizeof(t_cmd));
-		if (!new)
-			return (NULL);
-	}
+		return (ft_cmdadd_back(cmd_list, *new), 0);
 	else if (temp->type == WORD)
-		add_argv_to_cmd(new, temp->content);
+		add_argv_to_cmd(*new, temp->content);
+	else
+	{
+		if (add_redirect_to_cmd(temp, *new) == true)
+			return (1);
+		else
+			return (-1);
+	}
+	return (2);
 }
 
 t_cmd	*parser(t_token *token)
@@ -54,15 +74,28 @@ t_cmd	*parser(t_token *token)
 	t_token	*temp;
 	t_cmd	*cmd_list;
 	t_cmd	*new;
+	int		result;
 
 	temp = token;
 	new = ft_cmdnew();
 	if (!new)
 		return (NULL);
-	cmd_list = new;
+	cmd_list = NULL;
 	while (temp)
 	{
-		parser_compare(temp, cmd_list, new);
+		result = parser_compare(temp, &cmd_list, &new);
+		/*if (result == -1)
+			my_exit();*/
+		else if (result == 0)
+		{
+			new = ft_cmdnew();
+			if (!new)
+				return (NULL);
+		}
+		else if (result == 1)
+			temp = temp->next;
 		temp = temp->next;
 	}
+	ft_cmdadd_back(&cmd_list, new);
+	return (cmd_list);
 }
