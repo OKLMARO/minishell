@@ -6,21 +6,53 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/11 16:36:48 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/15 10:38:25 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	my_exit(t_cmd *cmd, t_token *token, char *string)
+void	my_exit(t_cmd **cmd, t_token **token, char *string)
 {
-	
+	if (cmd && *cmd)
+		ft_cmddestroy(cmd);
+	if (token && *token)
+		ft_tokendestroy(token);
+	if (string)
+		ft_putstr_fd(string, 2);
 }
 
-void	ft_tokenadd_front(t_token **lst, t_token *new)
+t_redirect	*ft_redirectnew(char *file, t_token_type type)
 {
-	new->next = *lst;
-	*lst = new;
+	t_redirect	*new;
+	char		*temp_file;
+	new = malloc(sizeof(t_redirect));
+	if (!new)
+		return (NULL);
+	temp_file = ft_strdup(file);
+	new->file = temp_file;
+	new->next = NULL;
+	new->type = type;
+	return (new);
+}
+
+void	ft_tokendestroy(t_token **lst)
+{
+	t_token	*temp;
+	t_token	*temp_next;
+
+	if (!lst || !*lst)
+		return ;
+	temp = *lst;
+	while (temp && temp->next)
+	{
+		temp_next = temp->next;
+		free(temp->content);
+		free(temp);
+		temp = temp_next;
+	}
+	free(temp->content);
+	free(temp);
 }
 
 void	ft_tokenadd_back(t_token **lst, t_token *new)
@@ -29,7 +61,8 @@ void	ft_tokenadd_back(t_token **lst, t_token *new)
 
 	if (!*lst)
 	{
-		ft_tokenadd_front(lst, new);
+		new->next = *lst;
+		*lst = new;
 		return ;
 	}
 	temp = *lst;
