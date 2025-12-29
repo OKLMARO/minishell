@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:24:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/15 10:38:02 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/29 17:52:56 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ t_cmd	*ft_cmdnew(void)
 		return (0);
 	new->argv = NULL;
 	new->next = NULL;
+	new->quote = NULL;
 	new->redirects = NULL;
 	return (new);
 }

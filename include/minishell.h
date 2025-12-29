@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
+/*   Updated: 2025/12/29 17:25:41 by oamairi          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -28,6 +40,12 @@ typedef enum {
 	DOUBLE_QUOTE
 }	t_quote_type;
 
+typedef struct s_shell
+{
+	char	**env;
+	long	exit_satuts;
+}			t_shell;
+
 typedef struct s_token
 {
 	t_token_type	type;
@@ -45,6 +63,7 @@ typedef struct s_redirect
 
 typedef struct s_cmd
 {
+	t_quote_type	*quote;
 	char			**argv;
 	t_redirect		*redirects;
 	struct s_cmd	*next;
