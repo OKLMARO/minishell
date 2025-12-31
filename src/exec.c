@@ -6,42 +6,27 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2025/11/17 12:00:03 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/31 12:41:54 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*valid_command(char *cmd, char **path)
+void	exec_simple(t_cmd *cmd)
 {
-	char	*valid_cmd;
-	char	*temp;
-	int		i;
-
-	i = 0;
-	valid_cmd = ft_strjoin("/", cmd);
-	if (!valid_cmd)
-		return (NULL);
-	while (path[i])
-	{
-		temp = ft_strjoin(path[i], valid_cmd);
-		if (!temp)
-			return (free(valid_cmd), NULL);
-		if (access(temp, X_OK) == 0)
-			return (free(valid_cmd), temp);
-		free(temp);
-		i++;
-	}
-	return (free(valid_cmd), NULL);
+	
 }
 
-int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path)
+void	exec_shell(t_cmd *cmd)
 {
-	*cmd = ft_split(argv, ' ');
-	if (!*cmd)
-		return (perror("Malloc crash"), 1);
-	*all_cmd = valid_command(*cmd[0], path);
-	if (!*all_cmd)
-		return (perror("Commande introuvable ou non executable"), 1);
-	return (0);
+	if (!cmd)
+		return ;
+	if (apply_redirection(cmd) == -1)
+		return (my_exit(cmd, NULL, "redirection error"));
+	if (!cmd->next)
+		simple_exec(cmd);
+	else if (!cmd->next->next)
+		pipex(cmd);
+	else
+		multi_exec(cmd);
 }

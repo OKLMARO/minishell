@@ -385,3 +385,128 @@ int main(void)
 
     return (0);
 }
+
+void	free_double(char **tab_str)
+{
+	int	i;
+
+	i = 0;
+	while (tab_str[i])
+	{
+		free(tab_str[i]);
+		i++;
+	}
+	free(tab_str);
+}
+
+void print_test_header(char *test_name, int test_num)
+{
+    printf("\n");
+    printf("════════════════════════════════════════\n");
+    printf("Test %d: %s\n", test_num, test_name);
+    printf("════════════════════════════════════════\n");
+}
+
+void print_cmd_before_after(t_cmd *cmd)
+{
+    int i;
+    
+    printf("\nBEFORE expansion:\n");
+    i = 0;
+    while (cmd->argv && cmd->argv[i])
+    {
+        printf("  argv[%d]: \"%s\" [quote=%d]\n", i, cmd->argv[i], cmd->quote[i]);
+        i++;
+    }
+}
+
+void print_after_expansion(t_cmd *cmd)
+{
+    int i;
+    
+    printf("\nAFTER expansion:\n");
+    i = 0;
+    while (cmd->argv && cmd->argv[i])
+    {
+        printf("  argv[%d]: \"%s\" [quote=%d]\n", i, cmd->argv[i], cmd->quote[i]);
+        i++;
+    }
+}
+
+void test_expand(char *input, char **env, int test_num)
+{
+    t_token *tokens;
+    t_cmd *cmd_list;
+    
+    print_test_header(input, test_num);
+    
+    // Lexer + Parser
+    tokens = lexer(input);
+    if (!tokens)
+    {
+        printf("❌ Lexer failed\n");
+        return;
+    }
+    
+    cmd_list = parser(tokens, 0);
+    if (!cmd_list)
+    {
+        printf("❌ Parser failed\n");
+        ft_tokendestroy(&tokens);
+        return;
+    }
+    
+    // Afficher avant expansion
+    print_cmd_before_after(cmd_list);
+    
+    // EXPANSION
+    expand_varialbes(cmd_list, env);
+    
+    // Afficher après expansion
+    print_after_expansion(cmd_list);
+    
+    printf("\n✅ Test completed\n");
+    
+    // Cleanup
+    ft_tokendestroy(&tokens);
+    ft_cmddestroy(&cmd_list);
+}
+
+int main(int argc, char **argv, char **env)
+{
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║    MINISHELL EXPANSION TESTER         ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    
+    // Tests basiques
+    test_expand("echo $USER", env, 1);
+    test_expand("echo $HOME", env, 2);
+    test_expand("echo $PATH", env, 3);
+    
+    // Variable inexistante
+    test_expand("echo $TOTO", env, 4);
+    
+    // Avec single quotes (pas d'expansion)
+    test_expand("echo '$USER'", env, 5);
+    
+    // Avec double quotes (expansion)
+    test_expand("echo \"$USER\"", env, 6);
+    
+    // Mixte
+    test_expand("echo $USER '$HOME' \"$PATH\"", env, 7);
+    
+    // Multiples variables
+    test_expand("echo $USER $HOME $PWD", env, 8);
+    
+    // Variable + texte normal
+    test_expand("echo hello $USER world", env, 9);
+    
+    // Sans $
+    test_expand("echo hello world", env, 10);
+    
+    printf("\n╔════════════════════════════════════════╗\n");
+    printf("║      ALL EXPANSION TESTS COMPLETED     ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    
+    return 0;
+}

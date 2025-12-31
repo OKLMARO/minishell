@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/29 17:25:41 by oamairi          ###   ########.fr       */
+/*   Updated: 2025/12/31 12:37:29 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ typedef enum {
 	DOUBLE_QUOTE
 }	t_quote_type;
 
-typedef struct s_shell
-{
-	char	**env;
-	long	exit_satuts;
-}			t_shell;
-
 typedef struct s_token
 {
 	t_token_type	type;
@@ -54,13 +48,6 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
-typedef struct s_redirect
-{
-	t_token_type		type;
-	char				*file;
-	struct s_redirect	*next;
-}						t_redirect;
-
 typedef struct s_cmd
 {
 	t_quote_type	*quote;
@@ -68,6 +55,19 @@ typedef struct s_cmd
 	t_redirect		*redirects;
 	struct s_cmd	*next;
 }					t_cmd;
+
+typedef struct s_redirect
+{
+	t_token_type		type;
+	char				*file;
+	struct s_redirect	*next;
+}						t_redirect;
+
+typedef struct s_shell
+{
+	char	**env;
+	long	exit_satuts;
+}			t_shell;
 
 t_cmd	*ft_cmdnew(void);
 void	builtin_pwd(void);
@@ -88,6 +88,7 @@ void	ft_tokendestroy(t_token **lst);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
+char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
@@ -96,6 +97,7 @@ void	my_exit(t_cmd **cmd, t_token **token, char *string);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);
 int		open_redirect_in(char **args, int i, int *file, t_list *list);
+int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path);
 int		open_redirect_out(char **args, int i, int *file, t_list *list);
 void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i);
 bool	lexer_compare(char *input, t_token **list, int *i, char *buffer);
