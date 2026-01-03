@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/31 12:37:29 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/03 13:33:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct s_token
 
 typedef struct s_cmd
 {
-	t_quote_type	*quote;
 	char			**argv;
+	t_quote_type	*quote;
 	t_redirect		*redirects;
 	struct s_cmd	*next;
 }					t_cmd;
