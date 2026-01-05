@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/03 13:33:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/05 10:40:07 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	free_double(char **tab_str);
 void	sigquit_handler2(int signo);
 char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
+bool	apply_redirection(t_cmd *cmd);
 void	ft_tokendestroy(t_token **lst);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);

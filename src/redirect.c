@@ -1,16 +1,67 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/05 10:39:11 by oamairi          ###   ########.fr       */
+/*   Created: 2026/01/05 10:39:37 by oamairi           #+#    #+#             */
+/*   Updated: 2026/01/05 11:53:42 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+bool	redirect_here_doc_utils(t_redirect *redirect)
+{
+	int	file;
+
+	file = open("/tmp/.minishell_heredoc", O_RDONLY);
+	if (file < 0)
+		return (ft_putstr_fd("HEREDOC ERROR", 2), false);
+	if (dup2(file, 0) == -1)
+		return (close(file), ft_putstr_fd("HEREDOC ERROR", 2), false);
+	return (close(file), true);
+}
+
+bool	redirect_here_doc(t_redirect *redirect)
+{
+	int		file;
+	char	*input;
+	int		len_file;
+	char	*temp_file;
+
+	temp_file = "/tmp/.minishell_heredoc";
+	len_file = ft_strlen(redirect->file);
+	file = open(temp_file, O_RDWR | O_TRUNC | O_CREAT, 0777);
+	if (file < 0)
+		return (ft_putstr_fd("HEREDOC ERROR", 2), false);
+	while (1)
+	{
+		input = readline("> ");
+		if (!input || (ft_strncmp(redirect->file, input, len_file) == 0
+				&& len_file == ft_strlen(input)))
+		{
+			free(input);
+			break ;
+		}
+		(ft_putstr_fd(input, file), ft_putchar_fd('\n', file), free(input));
+	}
+	close(file);
+	return (redirect_here_doc_utils(redirect));
+}
+
+bool	redirect_append(t_redirect *redirect)
+{
+	int	file;
+
+	file = open(redirect->file, O_WRONLY | O_APPEND | O_CREAT, 0777);
+	if (file < 0)
+		return (ft_putstr_fd("FILE ERROR", 2), false);
+	if (dup2(file, 1) == -1)
+		return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
+	return (close(file), true);
+}
 
 bool	redirect_in_out(t_redirect *redirect)
 {
@@ -24,7 +75,7 @@ bool	redirect_in_out(t_redirect *redirect)
 		if (dup2(file, 0) == -1)
 			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
 		return (close(file), true);
-	} 
+	}
 	else if (redirect->type == REDIRECT_OUT)
 	{
 		file = open(redirect->file, O_WRONLY | O_TRUNC | O_CREAT, 0777);
@@ -64,45 +115,4 @@ bool	apply_redirection(t_cmd *cmd)
 		temp = temp->next;
 	}
 	return (true);
-}
-
-void	simple_exec(t_cmd *cmd, char **path, char **env)
-{
-	pid_t	pid;
-	char	*command;
-
-	pid = fork();
-	if (pid == -1)
-		return (ft_putstr_fd("FORK ERROR", 2));
-	else if (pid == 0)
-	{
-		if (apply_redirection(cmd) == -1)
-			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
-		command = valid_command(cmd->argv[0], path);
-		if (!command)
-			(ft_putstr_fd("PATH ERROR", 2), exit(127));
-		execve(command, cmd->argv, env);
-		ft_putstr_fd("COMMAND ERROR", 2);
-		free(command);
-		exit(126);
-	}
-	waitpid(pid, NULL, 0);
-}
-
-void	exec_shell(t_cmd *cmd, char **env)
-{
-	char	**path;
-
-	if (!cmd)
-		return ;
-	path = get_path(env);
-	if (!path)
-		return (ft_putstr_fd("ENV ERROR", 2));
-	else if (!cmd->next)
-		simple_exec(cmd, path, env);
-	else if (!cmd->next->next)
-		pipex(cmd, path, env);
-	else
-		multi_exec(cmd, path, env);
-	free_double(path);
 }
