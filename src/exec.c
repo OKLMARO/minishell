@@ -6,65 +6,11 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/05 10:39:11 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/07 13:02:41 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-bool	redirect_in_out(t_redirect *redirect)
-{
-	int	file;
-
-	if (redirect->type == REDIRECT_IN)
-	{
-		file = open(redirect->file, O_RDONLY);
-		if (file < 0)
-			return (ft_putstr_fd("FILE ERROR", 2), false);
-		if (dup2(file, 0) == -1)
-			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
-		return (close(file), true);
-	} 
-	else if (redirect->type == REDIRECT_OUT)
-	{
-		file = open(redirect->file, O_WRONLY | O_TRUNC | O_CREAT, 0777);
-		if (file < 0)
-			return (ft_putstr_fd("FILE ERROR", 2), false);
-		if (dup2(file, 1) == -1)
-			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
-		return (close(file), true);
-	}
-	return (false);
-}
-
-bool	apply_redirection(t_cmd *cmd)
-{
-	t_redirect	*temp;
-
-	temp = cmd->redirects;
-	while (temp)
-	{
-		if (temp->type == REDIRECT_IN || temp->type == REDIRECT_OUT)
-		{
-			if (redirect_in_out(temp) == false)
-				return (false);
-		}
-		else if (temp->type == APPEND)
-		{
-			if (redirect_append(temp) == false)
-				return (false);
-		}
-		else if (temp->type == HERE_DOC)
-		{
-			if (redirect_here_doc(temp) == false)
-				return (false);
-		}
-		else
-			return (ft_putstr_fd("REDIRECT ERROR", 2), false);
-		temp = temp->next;
-	}
-	return (true);
-}
 
 void	simple_exec(t_cmd *cmd, char **path, char **env)
 {
@@ -76,7 +22,7 @@ void	simple_exec(t_cmd *cmd, char **path, char **env)
 		return (ft_putstr_fd("FORK ERROR", 2));
 	else if (pid == 0)
 	{
-		if (apply_redirection(cmd) == -1)
+		if (apply_redirection(cmd) == false)
 			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 		command = valid_command(cmd->argv[0], path);
 		if (!command)
@@ -87,6 +33,66 @@ void	simple_exec(t_cmd *cmd, char **path, char **env)
 		exit(126);
 	}
 	waitpid(pid, NULL, 0);
+}
+
+void	pipex_suite(t_cmd *cmd, char **path, char **env, int pip[2])
+{
+	pid_t	pid;
+	char	*command;
+
+	pid = fork();
+	if (pid == -1)
+		return (ft_putstr_fd("FORK ERROR", 2));
+	else if (pid == 0)
+	{
+		if (dup2(pip[0], 0) == -1)
+		{
+			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
+		}
+		(close(pip[0]), close(pip[1]));
+		if (apply_redirection(cmd) == false)
+			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
+		command = valid_command(cmd->argv[0], path);
+		if (!command)
+			(ft_putstr_fd("PATH ERROR", 2), exit(127));
+		execve(command, cmd->argv, env);
+		(ft_putstr_fd("COMMAND ERROR", 2), free(command), exit(126));
+	}
+	(close(pip[0]), close(pip[1]));
+	waitpid(pid, NULL, 0);
+}
+
+void	pipex(t_cmd *cmd, char **path, char **env)
+{
+	pid_t	pid;
+	int		pip[2];
+	char	*command;
+
+	pipe(pip);
+	pid = fork();
+	if (pid == -1)
+		return (ft_putstr_fd("FORK ERROR", 2), close(pip[0]), close(pip[1]));
+	if (pid == 0)
+	{
+		if (dup2(pip[1], 1) == -1)
+		{
+			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), close(pip[1]), exit(2));
+		}
+		(close(pip[0]), close(pip[1]));
+		if (apply_redirection(cmd) == false)
+			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
+		command = valid_command(cmd->argv[0], path);
+		if (!command)
+			(ft_putstr_fd("PATH ERROR", 2), exit(127));
+		execve(command, cmd->argv, env);
+		(ft_putstr_fd("COMMAND ERROR", 2), free(command), exit(126));
+	}
+	(pipex_suite(cmd->next, path, env, pip), waitpid(pid, NULL, 0));
+}
+
+void	multi_exec(t_cmd *cmd, char **path, char **env)
+{
+	
 }
 
 void	exec_shell(t_cmd *cmd, char **env)
