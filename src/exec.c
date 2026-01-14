@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/07 13:02:41 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/14 11:25:44 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	pipex(t_cmd *cmd, char **path, char **env)
 	pipe(pip);
 	pid = fork();
 	if (pid == -1)
-		return (ft_putstr_fd("FORK ERROR", 2), close(pip[0]), close(pip[1]));
+		return (close(pip[0]), close(pip[1]), ft_putstr_fd("FORK ERROR", 2));
 	if (pid == 0)
 	{
 		if (dup2(pip[1], 1) == -1)

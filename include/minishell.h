@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/05 10:40:07 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/14 11:24:41 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
+typedef struct s_redirect
+{
+	t_token_type		type;
+	char				*file;
+	struct s_redirect	*next;
+}						t_redirect;
+
 typedef struct s_cmd
 {
 	char			**argv;
@@ -55,13 +62,6 @@ typedef struct s_cmd
 	t_redirect		*redirects;
 	struct s_cmd	*next;
 }					t_cmd;
-
-typedef struct s_redirect
-{
-	t_token_type		type;
-	char				*file;
-	struct s_redirect	*next;
-}						t_redirect;
 
 typedef struct s_shell
 {
@@ -86,6 +86,7 @@ char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
 void	ft_tokendestroy(t_token **lst);
+t_cmd	*parser(t_token *token, int result);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
@@ -93,6 +94,7 @@ char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
+char	*expand_varialbes(t_cmd *cmd_list, char **env);
 int		redirect_out(char **args, int i, t_list *list);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);

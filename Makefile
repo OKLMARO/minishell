@@ -6,7 +6,7 @@
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/24 10:41:12 by oamairi           #+#    #+#              #
-#    Updated: 2025/11/24 10:41:13 by oamairi          ###   ########.fr        #
+#    Updated: 2026/01/14 11:14:59 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC		= cc
 
 CFLAGS	= -Wall -Wextra -Werror -g3
 
-SRCS	= src/builtin.c src/env.c src/exec.c src/fd.c src/lexer.c src/minishell.c src/utils.c
+SRCS	= src/builtin.c src/env.c src/exec.c src/exec_utils.c src/fd.c src/lexer.c src/minishell.c src/utils.c
 
 OBJS	= $(SRCS:.c=.o)
 

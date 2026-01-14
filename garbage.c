@@ -510,3 +510,83 @@ int main(int argc, char **argv, char **env)
     
     return 0;
 }
+
+void run_test(char *input, char **env, int test_num)
+{
+    t_token *tokens;
+    t_cmd *cmd_list;
+    
+    printf("\n╔═══════════════════════════════════════════╗\n");
+    printf("║ Test %d: %-35s║\n", test_num, input);
+    printf("╚═══════════════════════════════════════════╝\n");
+    
+    // Lexer
+    tokens = lexer(input);
+    if (!tokens)
+    {
+        printf("❌ Lexer failed\n");
+        return;
+    }
+    
+    // Parser
+    cmd_list = parser(tokens, 0);
+    ft_tokendestroy(&tokens);
+    
+    if (!cmd_list)
+    {
+        printf("❌ Parser failed\n");
+        return;
+    }
+    
+    // Expansion
+    expand_varialbes(cmd_list, env);
+    
+    // Execution
+    printf("─── OUTPUT ───\n");
+    exec_shell(cmd_list, env);
+    printf("──────────────\n");
+    
+    // Cleanup
+    ft_cmddestroy(&cmd_list);
+    
+    printf("✅ Test completed\n");
+    sleep(1);  // Pause entre tests
+}
+
+int main(int argc, char **argv, char **env)
+{
+    (void)argc;
+    (void)argv;
+    
+    printf("╔════════════════════════════════════════╗\n");
+    printf("║   MINISHELL - AUTOMATED TESTS          ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    
+    // Tests basiques
+    run_test("echo hello world", env, 1);
+    run_test("ls -la", env, 2);
+    run_test("pwd", env, 3);
+    
+    // Tests avec variables
+    run_test("echo $USER", env, 4);
+    run_test("echo $HOME", env, 5);
+    
+    // Tests avec pipes
+    run_test("ls | wc -l", env, 6);
+    run_test("cat Makefile | grep test", env, 7);
+    
+    // Tests avec redirections
+    run_test("echo test > /tmp/test_out.txt", env, 8);
+    run_test("cat < Makefile", env, 9);
+    
+    // Test quotes
+    run_test("echo 'hello world'", env, 10);
+    run_test("echo \"$USER is here\"", env, 11);
+    
+    printf("\n╔════════════════════════════════════════╗\n");
+    printf("║      ALL TESTS COMPLETED               ║\n");
+    printf("╚════════════════════════════════════════╝\n");
+    
+    return 0;
+}
+
