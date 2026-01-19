@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/14 11:24:41 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/19 13:47:59 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
 void	ft_tokendestroy(t_token **lst);
+void	exec_shell(t_cmd *cmd, char **env);
 t_cmd	*parser(t_token *token, int result);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
@@ -98,15 +99,15 @@ char	*expand_varialbes(t_cmd *cmd_list, char **env);
 int		redirect_out(char **args, int i, t_list *list);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
+void	make_lexer(t_token_type type, t_token **list, char *buffer);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);
 int		open_redirect_in(char **args, int i, int *file, t_list *list);
-int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path);
 int		open_redirect_out(char **args, int i, int *file, t_list *list);
 void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i);
 bool	lexer_compare(char *input, t_token **list, int *i, char *buffer);
+int		make_storage(char ***cmd, char *argv, char **all_cmd, char **path);
 bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer);
 bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer);
-void	make_lexer(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
 t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
 
 #endif

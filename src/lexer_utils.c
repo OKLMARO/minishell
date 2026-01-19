@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 10:34:45 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/10 15:55:30 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/19 13:47:23 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,24 @@ bool	lexer_compare(char *input, t_token **list, int *i, char *buffer)
 	if (input[*i + 1] && input[*i] == '<' && input[*i + 1] == '<')
 	{
 		*i = *i + 1;
-		return (make_lexer(HERE_DOC, list, buffer, NO_QUOTE), true);
+		return (make_lexer(HERE_DOC, list, buffer), true);
 	}
 	else if (input[*i] == '<')
-		return (make_lexer(REDIRECT_IN, list, buffer, NO_QUOTE), true);
+		return (make_lexer(REDIRECT_IN, list, buffer), true);
 	else if (input[*i + 1] && input[*i] == '>' && input[*i + 1] == '>')
 	{
 		*i = *i + 1;
-		return (make_lexer(APPEND, list, buffer, NO_QUOTE), true);
+		return (make_lexer(APPEND, list, buffer), true);
 	}
 	else if (input[*i] == '>')
-		return (make_lexer(REDIRECT_OUT, list, buffer, NO_QUOTE), true);
+		return (make_lexer(REDIRECT_OUT, list, buffer), true);
 	else if (input[*i] == '|')
-		return (make_lexer(PIPE, list, buffer, NO_QUOTE), true);
+		return (make_lexer(PIPE, list, buffer), true);
 	else if (input[*i] == '\'')
 		return (make_lexer_single_quote(input, list, i, buffer), true);
 	else if (input[*i] == '"')
 		return (make_lexer_double_quote(input, list, i, buffer));
 	else if (input[*i] == ' ')
-		return (make_lexer(WORD, list, buffer, NO_QUOTE), true);
+		return (make_lexer(WORD, list, buffer), true);
 	return (false);
 }

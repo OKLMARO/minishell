@@ -6,7 +6,7 @@
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/24 10:41:12 by oamairi           #+#    #+#              #
-#    Updated: 2026/01/14 11:14:59 by oamairi          ###   ########.fr        #
+#    Updated: 2026/01/19 14:11:08 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,11 @@ NAME	= minishell
 
 CC		= cc
 
-CFLAGS	= -Wall -Wextra -Werror -g3
+CFLAGS	= -Wall -Wextra -Werror
 
-SRCS	= src/builtin.c src/env.c src/exec.c src/exec_utils.c src/fd.c src/lexer.c src/minishell.c src/utils.c
+SRCS	=	src/builtin.c src/env.c src/exec.c src/exec_utils.c src/expand.c \
+			src/lexer_utils.c src/lexer.c src/main.c src/parser.c src/redirect.c \
+			src/t_cmd_utils.c src/t_token_utils.c src/utils.c
 
 OBJS	= $(SRCS:.c=.o)
 

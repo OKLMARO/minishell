@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/11 11:09:01 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/19 13:46:54 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@ t_token	*lexer_word(t_token_type type, t_token **list, char *buffer,
 	return (new);
 }
 
-void	make_lexer(t_token_type type, t_token **list, char *buffer,
-	t_quote_type quote)
+void	make_lexer(t_token_type type, t_token **list, char *buffer)
 {
-	int	i;
-
 	if (buffer[0] != '\0')
 		lexer_word(WORD, list, buffer, NO_QUOTE);
 	ft_memset(buffer, '\0', 4096);
