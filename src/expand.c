@@ -44,7 +44,7 @@ char	*expand_varialbes(t_cmd *cmd_list, char **env)
 	while (temp)
 	{
 		i = 0;
-		while (temp->argv[i])
+		while (temp->argv && temp->argv[i])
 		{
 			if (temp->argv[i][0] == '$' && temp->quote[i] != 1)
 			{
