@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/15 10:38:25 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/21 10:07:50 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_redirect	*ft_redirectnew(char *file, t_token_type type)
 {
 	t_redirect	*new;
 	char		*temp_file;
+
 	new = malloc(sizeof(t_redirect));
 	if (!new)
 		return (NULL);

@@ -6,19 +6,17 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/29 18:00:20 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/21 10:52:23 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	add_argv_to_cmd(t_cmd *cmd, t_token *lexer)
+void	add_argv_to_cmd(t_cmd *cmd, t_token *lexer, int count)
 {
-	int				count;
 	t_quote_type	*quote;
 	char			**new_argv;
 
-	count = 0;
 	while (cmd->argv && cmd->argv[count])
 		count++;
 	new_argv = malloc(sizeof(char *) * (count + 2));
@@ -54,7 +52,7 @@ bool	add_redirect_to_cmd(t_token *temp, t_cmd *new)
 	new_redirect->type = temp->type;
 	new_redirect->file = ft_strdup(temp->next->content);
 	if (!new_redirect->file)
-		return (false);
+		return (free(new_redirect), false);
 	new_redirect->next = NULL;
 	ft_redirectadd_back(&new->redirects, new_redirect);
 	return (true);
@@ -65,7 +63,7 @@ int	parser_compare(t_token *temp, t_cmd **cmd_list, t_cmd **new)
 	if (temp->type == PIPE)
 		return (ft_cmdadd_back(cmd_list, *new), 0);
 	else if (temp->type == WORD)
-		add_argv_to_cmd(*new, temp);
+		add_argv_to_cmd(*new, temp, 0);
 	else
 	{
 		if (add_redirect_to_cmd(temp, *new) == true)
@@ -91,7 +89,7 @@ t_cmd	*parser(t_token *token, int result)
 	{
 		result = parser_compare(temp, &cmd_list, &new);
 		if (result == -1)
-			my_exit(&cmd_list, NULL, "unexpected element");
+			my_exit(&cmd_list, &token, "unexpected element");
 		else if (result == 0)
 		{
 			new = ft_cmdnew();

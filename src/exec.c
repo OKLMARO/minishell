@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/19 13:33:35 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/21 10:33:22 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ void	simple_exec(t_cmd *cmd, char **path, char **env)
 {
 	char	*command;
 
+	if (apply_redirection(cmd) == false)
+			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 	command = valid_command(cmd->argv[0], path);
 	if (!command)
-		(ft_putstr_fd("PATH ERROR", 2), exit(127));
+		(ft_putstr_fd("command not found\n", 2), exit(127));
 	execve(command, cmd->argv, env);
 	ft_putstr_fd("COMMAND ERROR", 2);
 	free(command);
@@ -37,8 +39,6 @@ void	pipex_out(t_cmd *cmd, char **path, char **env, int pipe_out)
 		if (dup2(pipe_out, 0) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pipe_out), exit(2));
 		close(pipe_out);
-		if (apply_redirection(cmd) == false)
-			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 		simple_exec(cmd, path, env);
 	}
 	close(pipe_out);
@@ -60,8 +60,6 @@ void	pipex_mid(t_cmd *cmd, char **path, char **env, int pip_in)
 		if (dup2(pip_in, 0) == -1 || dup2(pip[1], 1) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
 		(close(pip[0]), close(pip[1]), close(pip_in));
-		if (apply_redirection(cmd) == false)
-			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 		simple_exec(cmd, path, env);
 	}
 	(close(pip[1]), close(pip_in));
@@ -88,8 +86,6 @@ void	pipex(t_cmd *cmd, char **path, char **env)
 			(ft_putstr_fd("DUP2 ERROR", 2), close(pip[0]), close(pip[1]),
 				exit(2));
 		(close(pip[0]), close(pip[1]));
-		if (apply_redirection(cmd) == false)
-			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 		simple_exec(cmd, path, env);
 	}
 	close(pip[1]);

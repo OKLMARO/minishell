@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:24:21 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/03 13:33:38 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/21 11:37:28 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,13 @@ void	ft_cmddestroy(t_cmd **lst)
 		temp_next = temp->next;
 		free_double(temp->argv);
 		ft_redirectdestroy(&temp->redirects);
+		free(temp->quote);
 		free(temp);
 		temp = temp_next;
 	}
+	ft_redirectdestroy(&temp->redirects);
 	free_double(temp->argv);
+	free(temp->quote);
 	free(temp);
 }
 

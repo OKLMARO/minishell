@@ -6,13 +6,13 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:39:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/05 11:53:42 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/21 10:06:12 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	redirect_here_doc_utils(t_redirect *redirect)
+bool	redirect_here_doc_utils(void)
 {
 	int	file;
 
@@ -40,7 +40,7 @@ bool	redirect_here_doc(t_redirect *redirect)
 	{
 		input = readline("> ");
 		if (!input || (ft_strncmp(redirect->file, input, len_file) == 0
-				&& len_file == ft_strlen(input)))
+				&& len_file == (int) ft_strlen(input)))
 		{
 			free(input);
 			break ;
@@ -48,7 +48,7 @@ bool	redirect_here_doc(t_redirect *redirect)
 		(ft_putstr_fd(input, file), ft_putchar_fd('\n', file), free(input));
 	}
 	close(file);
-	return (redirect_here_doc_utils(redirect));
+	return (redirect_here_doc_utils());
 }
 
 bool	redirect_append(t_redirect *redirect)

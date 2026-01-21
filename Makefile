@@ -6,7 +6,7 @@
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/24 10:41:12 by oamairi           #+#    #+#              #
-#    Updated: 2026/01/19 14:11:08 by oamairi          ###   ########.fr        #
+#    Updated: 2026/01/21 10:00:12 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	= minishell
 
 CC		= cc
 
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -g3
 
 SRCS	=	src/builtin.c src/env.c src/exec.c src/exec_utils.c src/expand.c \
 			src/lexer_utils.c src/lexer.c src/main.c src/parser.c src/redirect.c \
