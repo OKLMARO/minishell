@@ -17,7 +17,7 @@ void	free_double(char **tab_str)
 	int	i;
 
 	i = 0;
-	while (tab_str[i])
+	while (tab_str && tab_str[i])
 	{
 		free(tab_str[i]);
 		i++;
