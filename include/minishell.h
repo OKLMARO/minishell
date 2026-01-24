@@ -6,24 +6,25 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/19 13:47:59 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/24 17:49:44 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdlib.h>
 # include <stdio.h>
-# include <unistd.h>
-# include <string.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+#include <limits.h>
 # include <fcntl.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
 # include <signal.h>
-# include <sys/wait.h>
 # include <stdbool.h>
+# include <sys/wait.h>
 # include "libft/libft.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 
 typedef enum {
 	REDIRECT_OUT,
@@ -65,11 +66,14 @@ typedef struct s_cmd
 
 typedef struct s_shell
 {
+	t_cmd	*cmd;
 	char	**env;
+	t_token	*token;
 	long	exit_satuts;
 }			t_shell;
 
 t_cmd	*ft_cmdnew(void);
+t_shell	*make_shell(void);
 void	builtin_pwd(void);
 t_token	*lexer(char *input);
 char	**get_path(char **env);
@@ -86,11 +90,11 @@ char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
 void	ft_tokendestroy(t_token **lst);
-void	exec_shell(t_cmd *cmd, char **env);
 t_cmd	*parser(t_token *token, int result);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
+void	exec_shell(t_shell* shell, char **env);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		redirect_in(char **args, int i, t_list *list);

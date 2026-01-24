@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/21 11:38:34 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/24 17:54:04 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,29 @@
 int	main(int argc, char **argv, char **env)
 {
 	char	*input;
-	t_token	*token;
-	t_cmd	*cmd;
+	t_shell	*shell;
 
 	(void) argv;
 	(void) argc;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, sigint_handler);
+	shell = make_shell();
+	if (!shell)
+		return (ft_putstr_fd("MALLOC SHELL STRUCT ERROR", 2), 1);
+	/*if (copy_env_in_shell() == false)
+		return (free(shell), ft_putstr_fd("ENV COPY ERROR", 2), 1);*/
 	while (1)
 	{
 		input = readline("minishell $>");
 		if (!input)
 			break ;
 		add_history(input);
-		token = lexer(input);
-		cmd = parser(token, 0);
-		expand_varialbes(cmd, env);
-		exec_shell(cmd, env);
-		(ft_tokendestroy(&token), ft_cmddestroy(&cmd), free(input));
+		shell->token = lexer(input);
+		shell->cmd = parser(shell->token, 0);
+		(expand_varialbes(shell->cmd, env), exec_shell(shell, env));
+		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token), free(input));
 	}
 	rl_clear_history();
-	return (0);
+	free(shell);
+	return (/*delete_shell(shell), */0);
 }

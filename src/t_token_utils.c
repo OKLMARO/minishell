@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/21 10:07:50 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/24 14:08:28 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	ft_tokendestroy(t_token **lst)
 	}
 	free(temp->content);
 	free(temp);
+	*lst = NULL;
 }
 
 void	ft_tokenadd_back(t_token **lst, t_token *new)

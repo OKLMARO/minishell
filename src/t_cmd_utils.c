@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:24:21 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/21 11:37:28 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/24 17:58:07 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	ft_cmddestroy(t_cmd **lst)
 	free_double(temp->argv);
 	free(temp->quote);
 	free(temp);
+	*lst = NULL;
 }
 
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new)
