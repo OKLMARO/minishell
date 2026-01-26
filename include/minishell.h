@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 17:49:44 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/26 16:08:47 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,11 @@ char	*get_user_dir(char **env);
 void	sigint_handler(int signo);
 void	sigint_handler2(int signo);
 void	ft_cmddestroy(t_cmd **lst);
+void	exec_shell(t_shell* shell);
 void	ft_putnbr_fd(int n, int fd);
 void	free_double(char **tab_str);
 void	sigquit_handler2(int signo);
+void	delete_shell(t_shell *shell);
 char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
@@ -94,9 +96,9 @@ t_cmd	*parser(t_token *token, int result);
 int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
-void	exec_shell(t_shell* shell, char **env);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
+bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 char	*expand_varialbes(t_cmd *cmd_list, char **env);

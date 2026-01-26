@@ -6,7 +6,7 @@
 #    By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/24 10:41:12 by oamairi           #+#    #+#              #
-#    Updated: 2026/01/24 17:51:23 by oamairi          ###   ########.fr        #
+#    Updated: 2026/01/26 16:18:38 by oamairi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,6 @@ fclean: clean
 re: fclean all
 
 supp: all
-	valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --track-origins=yes --trace-children=no --trace-children-skip=/bin/*,/usr/bin/*,/usr/local/bin/* --suppressions=$(SUPP_FILE) -s ./$(NAME)
+	valgrind --leak-check=full --track-fds=yes --show-leak-kinds=all --track-origins=yes --trace-children=yes --trace-children-skip=/bin/*,/usr/bin/*,/usr/local/bin/* --suppressions=$(SUPP_FILE) -s ./$(NAME)
 
 .PHONY: all clean fclean re

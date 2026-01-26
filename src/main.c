@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 17:54:04 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/26 16:09:57 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	main(int argc, char **argv, char **env)
 	shell = make_shell();
 	if (!shell)
 		return (ft_putstr_fd("MALLOC SHELL STRUCT ERROR", 2), 1);
-	/*if (copy_env_in_shell() == false)
-		return (free(shell), ft_putstr_fd("ENV COPY ERROR", 2), 1);*/
+	if (copy_env_in_shell(shell, env) == false)
+		return (free(shell), ft_putstr_fd("ENV COPY ERROR", 2), 1);
 	while (1)
 	{
 		input = readline("minishell $>");
@@ -34,10 +34,8 @@ int	main(int argc, char **argv, char **env)
 		add_history(input);
 		shell->token = lexer(input);
 		shell->cmd = parser(shell->token, 0);
-		(expand_varialbes(shell->cmd, env), exec_shell(shell, env));
+		(expand_varialbes(shell->cmd, env), exec_shell(shell));
 		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token), free(input));
 	}
-	rl_clear_history();
-	free(shell);
-	return (/*delete_shell(shell), */0);
+	return (rl_clear_history(), delete_shell(shell), 0);
 }

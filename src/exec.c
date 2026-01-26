@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 14:35:26 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/26 16:20:29 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 	char	*command;
 
 	if (apply_redirection(cmd) == false)
-			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
+			(ft_putstr_fd("REDIRECT ERROR\n", 2), exit(2));
 	if (cmd && cmd->argv && cmd->argv[0] && path)
 	{
 		command = valid_command(cmd->argv[0], path);
 		if (!command)
 		{
 			(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
-			(free_double(path), ft_putstr_fd("COMMAND NOT FOUND", 2));
-			return (free(shell), exit(127));
+			(free_double(path), ft_putstr_fd("COMMAND NOT FOUND\n", 2));
+			return (delete_shell(shell), exit(127));
 		}
 		execve(command, cmd->argv, shell->env);
 		ft_putstr_fd("EXEC ERROR", 2);
 		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
-		(free(shell), free_double(path), free(command), exit(127));
+		(delete_shell(shell), free_double(path), free(command), exit(127));
 	}
 }
 
@@ -103,14 +103,14 @@ void	pipex(t_shell *shell, char **path)
 	waitpid(pid, NULL, 0);
 }
 
-void	exec_shell(t_shell* shell, char **env)
+void	exec_shell(t_shell* shell)
 {
 	char	**path;
 	pid_t	pid;
 
 	if (!shell->cmd)
 		return ;
-	path = get_path(env);
+	path = get_path(shell->env);
 	if (!path)
 		return (ft_putstr_fd("ENV ERROR", 2));
 	else if (!shell->cmd->next)
