@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 18:01:08 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/26 14:35:26 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 {
 	char	*command;
 
-	if (apply_redirection(shell->cmd) == false)
+	if (apply_redirection(cmd) == false)
 			(ft_putstr_fd("REDIRECT ERROR", 2), exit(2));
 	if (cmd && cmd->argv && cmd->argv[0] && path)
 	{
-		command = valid_command(shell->cmd->argv[0], path);
+		command = valid_command(cmd->argv[0], path);
 		if (!command)
 		{
 			(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
@@ -70,7 +70,7 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 		simple_exec(shell, path, cmd);
 	}
 	(close(pip[1]), close(pip_in));
-	if (!shell->cmd->next->next)
+	if (!cmd->next->next)
 		pipex_out(cmd->next, path, shell, pip[0]);
 	else
 		pipex_mid(cmd->next, path, shell, pip[0]);
