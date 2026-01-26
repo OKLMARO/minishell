@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 11:46:38 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 16:51:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/26 16:33:16 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,3 @@ int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path)
 		return (perror("Commande introuvable ou non executable"), 1);
 	return (0);
 }
-
-/*void	exec_fail(t_token *token, t_cmd *cmd, char *input)
-{
-	
-}*/
