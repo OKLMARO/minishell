@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 16:20:29 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/27 10:38:38 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 		if (dup2(pipe_out, 0) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pipe_out), exit(2));
 		close(pipe_out);
+		builtin_exec(shell, path, cmd);
 		simple_exec(shell, path, cmd);
 	}
 	close(pipe_out);
@@ -67,6 +68,7 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 		if (dup2(pip_in, 0) == -1 || dup2(pip[1], 1) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
 		(close(pip[0]), close(pip[1]), close(pip_in));
+		builtin_exec(shell, path, cmd);
 		simple_exec(shell, path, cmd);
 	}
 	(close(pip[1]), close(pip_in));
@@ -93,6 +95,7 @@ void	pipex(t_shell *shell, char **path)
 			(ft_putstr_fd("DUP2 ERROR", 2), close(pip[0]), close(pip[1]),
 				exit(2));
 		(close(pip[0]), close(pip[1]));
+		builtin_exec(shell, path, shell->cmd);
 		simple_exec(shell, path, shell->cmd);
 	}
 	close(pip[1]);
@@ -119,7 +122,10 @@ void	exec_shell(t_shell* shell)
 		if (pid == -1)
 			return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
 		else if (pid == 0)
+		{
+			builtin_exec(shell, path, shell->cmd);
 			simple_exec(shell, path, shell->cmd);
+		}
 		waitpid(pid, NULL, 0);
 	}
 	else

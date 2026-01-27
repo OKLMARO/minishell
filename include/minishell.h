@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 16:08:47 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/27 10:48:07 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,9 @@ typedef struct s_shell
 
 t_cmd	*ft_cmdnew(void);
 t_shell	*make_shell(void);
-void	builtin_pwd(void);
 t_token	*lexer(char *input);
 char	**get_path(char **env);
 int		init_token(t_list **list);
-int		builtin_echo(char **args);
 char	*get_user_dir(char **env);
 void	sigint_handler(int signo);
 void	sigint_handler2(int signo);
@@ -93,17 +91,20 @@ void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
 void	ft_tokendestroy(t_token **lst);
 t_cmd	*parser(t_token *token, int result);
-int		builtin_cd(char **args, char **env);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
+int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
+int		builtin_pwd(t_cmd *cmd, t_shell *shell);
+int		builtin_echo(t_cmd *cmd, t_shell *shell);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 char	*expand_varialbes(t_cmd *cmd_list, char **env);
 int		redirect_out(char **args, int i, t_list *list);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
+void	builtin_exec(t_shell *shell, char **path, t_cmd *cmd);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 void	make_lexer(t_token_type type, t_token **list, char *buffer);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);

@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:49:51 by oamairi           #+#    #+#             */
-/*   Updated: 2025/11/17 12:00:38 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/27 10:22:06 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ char	*get_user_dir(char **env)
 	user_dir = NULL;
 	while (env[i])
 	{
-		if (ft_strncmp("USER_ZDOTDIR=", env[i], 13) == 0)
+		if (ft_strncmp("HOME=", env[i], 5) == 0)
 		{
-			user_dir = ft_strdup(env[i] + 13);
+			user_dir = ft_strdup(env[i] + 5);
 			if (!user_dir)
 				return (NULL);
 		}
