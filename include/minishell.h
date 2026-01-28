@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/27 10:48:07 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/28 15:51:28 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,14 @@ typedef struct s_shell
 	t_cmd	*cmd;
 	char	**env;
 	t_token	*token;
-	long	exit_satuts;
+	long	exit_status;
 }			t_shell;
 
 t_cmd	*ft_cmdnew(void);
 t_shell	*make_shell(void);
-t_token	*lexer(char *input);
 char	**get_path(char **env);
+int		builtin_pwd(t_cmd *cmd);
+int		builtin_echo(t_cmd *cmd);
 int		init_token(t_list **list);
 char	*get_user_dir(char **env);
 void	sigint_handler(int signo);
@@ -96,15 +97,17 @@ void	ft_redirectdestroy(t_redirect **lst);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
-int		builtin_pwd(t_cmd *cmd, t_shell *shell);
-int		builtin_echo(t_cmd *cmd, t_shell *shell);
+int		builtin_env(t_cmd *cmd, t_shell *shell);
+t_token	*lexer(char *input);
+bool	builtin_exec(t_shell *shell, t_cmd *cmd);
+int		builtin_unset(t_cmd *cmd, t_shell *shell);
+int		builtin_export(t_cmd *cmd, t_shell *shell);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 char	*expand_varialbes(t_cmd *cmd_list, char **env);
 int		redirect_out(char **args, int i, t_list *list);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
-void	builtin_exec(t_shell *shell, char **path, t_cmd *cmd);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 void	make_lexer(t_token_type type, t_token **list, char *buffer);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);

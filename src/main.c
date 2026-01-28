@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 16:09:57 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/28 15:51:47 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	main(int argc, char **argv, char **env)
 		add_history(input);
 		shell->token = lexer(input);
 		shell->cmd = parser(shell->token, 0);
-		(expand_varialbes(shell->cmd, env), exec_shell(shell));
-		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token), free(input));
+		(expand_varialbes(shell->cmd, env), exec_shell(shell), free(input));
+		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
 	}
 	return (rl_clear_history(), delete_shell(shell), 0);
 }

@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 17:03:07 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 16:52:06 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/28 12:35:58 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_shell	*make_shell(void)
 	temp->cmd = NULL;
 	temp->token = NULL;
 	temp->env = NULL;
-	temp->exit_satuts = 0;
+	temp->exit_status = 0;
 	return (temp);
 }
 

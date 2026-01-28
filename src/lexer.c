@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:40:21 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/19 13:46:54 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/28 15:51:18 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ bool	make_lexer_double_quote(char *input, t_token **list, int *i,
 
 t_token	*lexer(char *input)
 {
-	int		i;
 	t_token	*list;
 	char	*buffer;
+	int		i;
 	int		i_buffer;
 
 	i = 0;
@@ -100,12 +100,14 @@ t_token	*lexer(char *input)
 	if (!buffer)
 		return (NULL);
 	ft_memset(buffer, '\0', 4096);
-	while (input[i])
+	while (input && input[i])
 	{
 		if (lexer_compare(input, &list, &i, buffer) == false)
 			add_to_buffer(buffer, &i_buffer, input, i);
 		else
 			(ft_memset(buffer, '\0', 4096), i_buffer = 0);
+		if (!input[i])
+			break ;
 		i++;
 	}
 	if (i_buffer > 0)
