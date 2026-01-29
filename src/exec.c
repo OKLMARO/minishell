@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/28 15:34:32 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/29 17:36:37 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 	}
 }
 
+void	get_clean_status(t_shell *shell)
+{
+	if (WIFEXITED(shell->raw_statuts))
+		shell->exit_status = WEXITSTATUS(shell->raw_statuts);
+	else if (WIFSIGNALED(shell->raw_statuts))
+		shell->exit_status = WTERMSIG(shell->raw_statuts) + 128;
+}
+
 void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 {
 	pid_t	pid;
@@ -53,7 +61,7 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 		(free_double(path), delete_shell(shell), exit(status));
 	}
 	close(pipe_out);
-	waitpid(pid, NULL, 0);
+	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
 }
 
 void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
@@ -82,7 +90,7 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 		pipex_out(cmd->next, path, shell, pip[0]);
 	else
 		pipex_mid(cmd->next, path, shell, pip[0]);
-	waitpid(pid, NULL, 0);
+	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
 }
 
 void	pipex(t_shell *shell, char **path, int status)
@@ -110,7 +118,7 @@ void	pipex(t_shell *shell, char **path, int status)
 		pipex_out(shell->cmd->next, path, shell, pip[0]);
 	else
 		pipex_mid(shell->cmd->next, path, shell, pip[0]);
-	waitpid(pid, NULL, 0);
+	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
 }
 
 void	exec_shell(t_shell* shell)
@@ -131,10 +139,9 @@ void	exec_shell(t_shell* shell)
 			if (pid == -1)
 				return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
 			else if (pid == 0)
-			{
 				simple_exec(shell, path, shell->cmd);
-			}
-			waitpid(pid, NULL, 0);
+			waitpid(pid, &shell->raw_statuts, 0);
+			get_clean_status(shell);
 		}
 	}
 	else

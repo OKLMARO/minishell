@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:30:35 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/30 11:54:55 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/29 17:38:15 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,18 @@ char	*get_variables(char *argv, char **env)
 	return (variable);
 }
 
-char	*expand_varialbes(t_cmd *cmd_list, char **env)
+char	*get_exit_status(t_shell *shell)
 {
-	int		i;
+	char	*temp;
+
+	temp = ft_itoa(shell->exit_status);
+	if (!temp)
+		return (NULL);
+	return (temp);
+}
+
+char	*expand_varialbes(t_cmd *cmd_list, t_shell *shell, int i)
+{
 	t_cmd	*temp;
 	char	*value;
 
@@ -48,7 +57,10 @@ char	*expand_varialbes(t_cmd *cmd_list, char **env)
 		{
 			if (temp->argv[i][0] == '$' && temp->quote[i] != 1)
 			{
-				value = get_variables(temp->argv[i] + 1, env);
+				if (temp->argv[i][1] == '?' && !temp->argv[i][2])
+					value = get_exit_status(shell);
+				else
+					value = get_variables(temp->argv[i] + 1, shell->env);
 				if (!value)
 					return (NULL);
 				free(temp->argv[i]);

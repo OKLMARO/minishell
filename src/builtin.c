@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/28 15:56:44 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/29 16:57:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ bool	builtin_exec(t_shell *shell, t_cmd *cmd)
 		else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 			return (shell->exit_status = builtin_cd(cmd, shell), true);
 		else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
-		{
-			shell->exit_status = builtin_env(cmd, shell);
-			return (true);
-		}
+			return (shell->exit_status = builtin_env(cmd, shell), true);
 		else if (ft_strncmp(cmd->argv[0], "export", 6) == 0)
 		{
 			shell->exit_status = builtin_export(cmd, shell);
