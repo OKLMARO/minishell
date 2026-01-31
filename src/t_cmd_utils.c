@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 15:24:21 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 17:58:07 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 23:58:15 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	ft_redirectdestroy(t_redirect **lst)
 		free(temp);
 		temp = temp_next;
 	}
+	if (temp->file_heredoc)
+		free(temp->file);
 	free(temp->file);
 	free(temp);
 }

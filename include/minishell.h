@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/31 11:56:35 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 23:56:10 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_redirect
 	t_token_type		type;
 	char				*file;
 	struct s_redirect	*next;
+	char				**file_heredoc;
 }						t_redirect;
 
 typedef struct s_cmd
@@ -86,6 +87,7 @@ int		builtin_echo(t_cmd *cmd);
 int		init_token(t_list **list);
 char	*get_user_dir(char **env);
 void	sigint_handler(int signo);
+void	do_heredoc(t_shell *shell);
 void	sigint_handler2(int signo);
 void	ft_cmddestroy(t_cmd **lst);
 void	exec_shell(t_shell *shell);
@@ -104,6 +106,7 @@ int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
+bool	redirect_here_doc(t_redirect *redirect);
 int		builtin_unset(t_cmd *cmd, t_shell *shell);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);

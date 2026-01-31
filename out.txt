@@ -9,7 +9,6 @@ mkdir
 out.txt
 readline.supp
 src
-venv
 a.out
 fd.c
 garbage.c
@@ -21,4 +20,4 @@ mkdir
 out.txt
 readline.supp
 src
-venv
+salut

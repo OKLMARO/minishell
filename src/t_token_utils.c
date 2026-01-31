@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/24 14:08:28 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 23:33:49 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_redirect	*ft_redirectnew(char *file, t_token_type type)
 		return (NULL);
 	temp_file = ft_strdup(file);
 	new->file = temp_file;
+	new->id_heredoc = -1;
 	new->next = NULL;
 	new->type = type;
 	return (new);

@@ -6,13 +6,13 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/31 12:16:10 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 20:36:36 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path)
+bool	builtin_parsing(t_shell *shell, t_cmd *cmd, char **path)
 {
 	if (cmd && cmd->argv)
 	{
@@ -33,6 +33,24 @@ bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path)
 		return (false);
 	}
 	return (false);
+}
+bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path)
+{
+	int		std_in;
+	int		std_out;
+	bool	is_builtin;
+	std_in = dup(0);
+	std_out = dup(1);
+	if (std_in == -1 || std_out == -1)
+		return (ft_putendl_fd("dup error", 2), false);
+	if (apply_redirection(cmd) == false)
+		return (false);
+	is_builtin = builtin_parsing(shell, cmd, path);
+	if (dup2(std_in, 0) == -1 || dup2(std_out, 1) == -1)
+		return (ft_putendl_fd("dup2 error", 2), false);
+	close(std_in);
+	close(std_out);
+	return (is_builtin);
 }
 
 int	builtin_exit(t_cmd *cmd, t_shell *shell, char **path)
