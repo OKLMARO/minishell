@@ -6,13 +6,13 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/29 16:57:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 12:16:10 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	builtin_exec(t_shell *shell, t_cmd *cmd)
+bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path)
 {
 	if (cmd && cmd->argv)
 	{
@@ -25,18 +25,33 @@ bool	builtin_exec(t_shell *shell, t_cmd *cmd)
 		else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 			return (shell->exit_status = builtin_env(cmd, shell), true);
 		else if (ft_strncmp(cmd->argv[0], "export", 6) == 0)
-		{
-			shell->exit_status = builtin_export(cmd, shell);
-			return (true);
-		}
+			return (shell->exit_status = builtin_export(cmd, shell, 0), true);
 		else if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
-		{
-			shell->exit_status = builtin_unset(cmd, shell);
-			return (true);
-		}
+			return (shell->exit_status = builtin_unset(cmd, shell), true);
+		else if (ft_strncmp(cmd->argv[0], "exit", 5) == 0)
+			return (shell->exit_status = builtin_exit(cmd, shell, path), true);
 		return (false);
 	}
 	return (false);
+}
+
+int	builtin_exit(t_cmd *cmd, t_shell *shell, char **path)
+{
+	int	exit_value;
+
+	if (cmd->argv[1])
+	{
+		if (cmd->argv[2])
+			return (ft_putendl_fd("too many arg", 2), 1);
+		exit_value = ft_atoi(cmd->argv[1]);
+		free_double(path);
+		delete_shell(shell);
+		exit(exit_value);
+	}
+	free_double(path);
+	delete_shell(shell);
+	exit(0);
+	return (0);
 }
 
 int	builtin_pwd(t_cmd *cmd)
@@ -167,9 +182,8 @@ int	add_to_env(t_cmd *cmd, t_shell *shell)
 	return (0);
 }
 
-int	builtin_export(t_cmd *cmd, t_shell *shell)
+int	builtin_export(t_cmd *cmd, t_shell *shell, int i)
 {
-	int		i;
 	char	*temp;
 
 	if (!cmd->argv[1])
@@ -199,8 +213,8 @@ int	builtin_export(t_cmd *cmd, t_shell *shell)
 
 void	remove_env(t_shell *shell, int j)
 {
-	int	i;
-	int	k;
+	int		i;
+	int		k;
 	char	**new_env;
 
 	new_env = malloc(sizeof(char *) * ft_strlenlen(shell->env));
@@ -239,7 +253,8 @@ int	builtin_unset(t_cmd *cmd, t_shell *shell)
 		j = 0;
 		while (shell->env[j])
 		{
-			if (ft_strncmp(cmd->argv[i], shell->env[j], ft_strlen(cmd->argv[i])) == 0 && shell->env[j][ft_strlen(cmd->argv[i])] == '=')
+			if (ft_strncmp(cmd->argv[i], shell->env[j], ft_strlen(cmd->argv[i]))
+				== 0 && shell->env[j][ft_strlen(cmd->argv[i])] == '=')
 			{
 				remove_env(shell, j);
 				break ;

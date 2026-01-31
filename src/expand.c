@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:30:35 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/29 17:38:15 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 11:41:04 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,13 @@ char	*get_exit_status(t_shell *shell)
 {
 	char	*temp;
 
-	temp = ft_itoa(shell->exit_status);
+	if (g_sv == 130)
+	{
+		temp = ft_itoa(130);
+		g_sv = 0;
+	}
+	else
+		temp = ft_itoa(shell->exit_status);
 	if (!temp)
 		return (NULL);
 	return (temp);

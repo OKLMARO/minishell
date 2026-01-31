@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/29 17:36:37 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 11:57:33 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 	char	*command;
 
 	if (apply_redirection(cmd) == false)
-			(ft_putstr_fd("REDIRECT ERROR\n", 2), exit(2));
+		(ft_putstr_fd("REDIRECT ERROR\n", 2), exit(2));
 	if (cmd && cmd->argv && cmd->argv[0] && path)
 	{
 		command = valid_command(cmd->argv[0], path);
@@ -56,7 +56,7 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 		if (dup2(pipe_out, 0) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pipe_out), exit(2));
 		close(pipe_out);
-		if (builtin_exec(shell, cmd) == false)
+		if (builtin_exec(shell, cmd, path) == false)
 			simple_exec(shell, path, cmd);
 		(free_double(path), delete_shell(shell), exit(status));
 	}
@@ -81,7 +81,7 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 		if (dup2(pip_in, 0) == -1 || dup2(pip[1], 1) == -1)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
 		(close(pip[0]), close(pip[1]), close(pip_in));
-		if (builtin_exec(shell, cmd) == false)
+		if (builtin_exec(shell, cmd, path) == false)
 			simple_exec(shell, path, cmd);
 		(free_double(path), delete_shell(shell), exit(status));
 	}
@@ -109,7 +109,7 @@ void	pipex(t_shell *shell, char **path, int status)
 			(ft_putstr_fd("DUP2 ERROR", 2), close(pip[0]), close(pip[1]),
 				exit(2));
 		(close(pip[0]), close(pip[1]));
-		if (builtin_exec(shell, shell->cmd) == false)
+		if (builtin_exec(shell, shell->cmd, path) == false)
 			simple_exec(shell, path, shell->cmd);
 		(free_double(path), delete_shell(shell), exit(status));
 	}
@@ -121,7 +121,7 @@ void	pipex(t_shell *shell, char **path, int status)
 	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
 }
 
-void	exec_shell(t_shell* shell)
+void	exec_shell(t_shell *shell)
 {
 	char	**path;
 	pid_t	pid;
@@ -133,7 +133,7 @@ void	exec_shell(t_shell* shell)
 		return (ft_putendl_fd("ENV ERROR", 2));
 	if (!shell->cmd->next)
 	{
-		if (builtin_exec(shell, shell->cmd) == false)
+		if (builtin_exec(shell, shell->cmd, path) == false)
 		{
 			pid = fork();
 			if (pid == -1)

@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/29 17:34:36 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 11:56:35 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include <stdio.h>
-#include <limits.h>
+# include <limits.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -26,7 +26,8 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-typedef enum {
+typedef enum e_token_type
+{
 	REDIRECT_OUT,
 	REDIRECT_IN,
 	HERE_DOC,
@@ -35,7 +36,8 @@ typedef enum {
 	PIPE
 }	t_token_type;
 
-typedef enum {
+typedef enum e_quote_type
+{
 	NO_QUOTE,
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE
@@ -73,6 +75,8 @@ typedef struct s_shell
 	int		raw_statuts;
 }			t_shell;
 
+extern int	g_sv;
+
 t_cmd	*ft_cmdnew(void);
 t_shell	*make_shell(void);
 t_token	*lexer(char *input);
@@ -84,7 +88,7 @@ char	*get_user_dir(char **env);
 void	sigint_handler(int signo);
 void	sigint_handler2(int signo);
 void	ft_cmddestroy(t_cmd **lst);
-void	exec_shell(t_shell* shell);
+void	exec_shell(t_shell *shell);
 void	sigquit_handler2(int signo);
 void	ft_putnbr_fd(int n, int fd);
 void	free_double(char **tab_str);
@@ -100,14 +104,15 @@ int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
-bool	builtin_exec(t_shell *shell, t_cmd *cmd);
 int		builtin_unset(t_cmd *cmd, t_shell *shell);
-int		builtin_export(t_cmd *cmd, t_shell *shell);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 int		redirect_out(char **args, int i, t_list *list);
+int		builtin_export(t_cmd *cmd, t_shell *shell, int i);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
+int		builtin_exit(t_cmd *cmd, t_shell *shell, char **path);
+bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 char	*expand_varialbes(t_cmd *cmd_list, t_shell *shell, int i);
 void	make_lexer(t_token_type type, t_token **list, char *buffer);
@@ -117,8 +122,11 @@ int		open_redirect_out(char **args, int i, int *file, t_list *list);
 void	add_to_buffer(char *buffer, int *i_buffer, char *input, int i);
 bool	lexer_compare(char *input, t_token **list, int *i, char *buffer);
 int		make_storage(char ***cmd, char *argv, char **all_cmd, char **path);
-bool	make_lexer_single_quote(char *input, t_token **list, int *i, char *buffer);
-bool	make_lexer_double_quote(char *input, t_token **list, int *i, char *buffer);
-t_token	*lexer_word(t_token_type type, t_token **list, char *buffer, t_quote_type quote);
+bool	make_lexer_single_quote(char *input, t_token **list,
+			int *i, char *buffer);
+bool	make_lexer_double_quote(char *input, t_token **list,
+			int *i, char *buffer);
+t_token	*lexer_word(t_token_type type, t_token **list, char *buffer,
+			t_quote_type quote);
 
 #endif

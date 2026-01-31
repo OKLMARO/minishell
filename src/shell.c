@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 17:03:07 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/28 12:35:58 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/01/31 11:43:28 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,19 @@ t_shell	*make_shell(void)
 	temp->token = NULL;
 	temp->env = NULL;
 	temp->exit_status = 0;
+	temp->raw_statuts = 0;
 	return (temp);
 }
 
 bool	copy_env_in_shell(t_shell *shell, char **env)
 {
-	char **copy_env;
-	int	len_env;
+	char	**copy_env;
+	int		len_env;
 
 	len_env = 0;
 	while (env[len_env])
 		len_env++;
-	copy_env = malloc(sizeof(char*) * (len_env + 1));
+	copy_env = malloc(sizeof(char *) * (len_env + 1));
 	if (!copy_env)
 		return (false);
 	len_env = 0;
