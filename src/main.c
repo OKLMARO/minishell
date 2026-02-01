@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 22:33:13 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 23:04:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ int	main(int argc, char **argv, char **env)
 		if (!input)
 			break ;
 		routine(shell, input);
+		if (shell->cmd)
+			ft_cmddestroy(&shell->cmd);
+		if (shell->token)
+			ft_tokendestroy(&shell->token);
 	}
 	return (rl_clear_history(), delete_shell(shell), 0);
 }
