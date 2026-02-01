@@ -1,0 +1,13 @@
+a.out
+e
+fd.c
+garbage.c
+include
+Makefile
+minishell
+minishell.c
+out.txt
+readline.supp
+src
+testtt.txt
+test.txt

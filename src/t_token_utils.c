@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 10:50:10 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 19:20:10 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 22:25:10 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	my_exit(t_cmd **cmd, t_token **token, char *string)
 	if (token && *token)
 		ft_tokendestroy(token);
 	if (string)
-		ft_putstr_fd(string, 2);
+		ft_putendl_fd(string, 2);
 }
 
 t_redirect	*ft_redirectnew(char *file, t_token_type type)

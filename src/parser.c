@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/21 10:52:23 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 22:38:49 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_cmd	*parser(t_token *token, int result)
 	{
 		result = parser_compare(temp, &cmd_list, &new);
 		if (result == -1)
-			my_exit(&cmd_list, &token, "unexpected element");
+			return (ft_putendl_fd("unexpected element", 2), NULL);
 		else if (result == 0)
 		{
 			new = ft_cmdnew();

@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 21:05:42 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 22:33:13 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,20 @@ void	routine(t_shell *shell, char *input)
 	{
 		add_history(input);
 		shell->token = lexer(input);
-		shell->cmd = parser(shell->token, 0);
-		(expand_varialbes(shell->cmd, shell, 0), do_heredoc(shell, 0));
-		(exec_shell(shell), free(input));
-		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token), g_sv = 0);
+		if (shell->token)
+		{
+			shell->cmd = parser(shell->token, 0);
+			if (shell->cmd)
+			{
+				(expand_varialbes(shell->cmd, shell, 0));
+				(do_heredoc(shell, 0), exec_shell(shell), free(input));
+			}
+		}
+		if (shell->cmd)
+			ft_cmddestroy(&shell->cmd);
+		if (shell->token)
+			ft_tokendestroy(&shell->token);
+		g_sv = 0;
 	}
 }
 
