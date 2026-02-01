@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:32:39 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 23:55:45 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ extern int	g_sv;
 t_cmd	*ft_cmdnew(void);
 t_shell	*make_shell(void);
 t_token	*lexer(char *input);
+void	sigchild(int signo);
 char	**get_path(char **env);
 int		builtin_pwd(t_cmd *cmd);
 int		builtin_echo(t_cmd *cmd);

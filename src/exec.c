@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 22:51:48 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/02 00:00:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,8 @@ void	exec_shell(t_shell *shell)
 				return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
 			else if (pid == 0)
 				simple_exec(shell, path, shell->cmd);
-			waitpid(pid, &shell->raw_statuts, 0);
-			get_clean_status(shell);
+			(signal(SIGINT, sigchild), waitpid(pid, &shell->raw_statuts, 0));
+			(signal(SIGINT, sigint_handler), get_clean_status(shell));
 		}
 	}
 	else
