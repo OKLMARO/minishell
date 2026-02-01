@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/31 11:57:33 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 20:38:12 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,6 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
 		(delete_shell(shell), free_double(path), free(command), exit(127));
 	}
-}
-
-void	get_clean_status(t_shell *shell)
-{
-	if (WIFEXITED(shell->raw_statuts))
-		shell->exit_status = WEXITSTATUS(shell->raw_statuts);
-	else if (WIFSIGNALED(shell->raw_statuts))
-		shell->exit_status = WTERMSIG(shell->raw_statuts) + 128;
 }
 
 void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)

@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 11:46:38 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/26 16:33:16 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 20:38:16 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,12 @@ int	make_storage(char ***cmd, char *argv, char **all_cmd, char **path)
 	if (!*all_cmd)
 		return (perror("Commande introuvable ou non executable"), 1);
 	return (0);
+}
+
+void	get_clean_status(t_shell *shell)
+{
+	if (WIFEXITED(shell->raw_statuts))
+		shell->exit_status = WEXITSTATUS(shell->raw_statuts);
+	else if (WIFSIGNALED(shell->raw_statuts))
+		shell->exit_status = WTERMSIG(shell->raw_statuts) + 128;
 }

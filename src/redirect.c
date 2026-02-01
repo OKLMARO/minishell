@@ -6,34 +6,20 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:39:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/31 23:57:27 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 21:10:40 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	redirect_here_doc(t_redirect *redirect)
-{
-	int	file;
-
-	file = open(redirect->file_heredoc, O_RDONLY);
-	if (file < 0)
-		return (ft_putstr_fd("HEREDOC ERROR", 2), false);
-	if (dup2(file, 0) == -1)
-		return (close(file), ft_putstr_fd("HEREDOC ERROR", 2), false);
-	close(file);
-	unlink(redirect->file_heredoc);
-	return (true);
-}
-
-void	do_heredoc_utils(t_redirect *redirect)
+void	do_heredoc_utils(t_redirect *redirect, char *new_file)
 {
 	int		file;
 	char	*input;
 	int		len_file;
 
 	len_file = ft_strlen(redirect->file);
-	file = open(redirect->file_heredoc, O_RDWR | O_TRUNC | O_CREAT, 0777);
+	file = open(new_file, O_RDWR | O_TRUNC | O_CREAT, 0777);
 	if (file < 0)
 		return (ft_putendl_fd("HEREDOC ERROR", 2));
 	while (1)
@@ -47,12 +33,14 @@ void	do_heredoc_utils(t_redirect *redirect)
 		}
 		(ft_putstr_fd(input, file), ft_putchar_fd('\n', file), free(input));
 	}
+	free(redirect->file);
+	redirect->file = new_file;
+	redirect->type = REDIRECT_IN;
 	close(file);
 }
 
-void	do_heredoc(t_shell *shell)
+void	do_heredoc(t_shell *shell, int i)
 {
-	int			i;
 	char		*id;
 	t_cmd		*temp;
 	t_redirect	*redirect;
@@ -68,9 +56,8 @@ void	do_heredoc(t_shell *shell)
 			if (redirect->type == HERE_DOC)
 			{
 				id = ft_itoa(i);
-				temp_file = ft_strjoin("/tmp/.minishell_heredoc", id);
-				redirect->file_heredoc = temp_file;
-				(free(id), do_heredoc_utils(redirect));
+				temp_file = ft_strjoin("/tmp/.minishell_heredoc_", id);
+				(free(id), do_heredoc_utils(redirect, temp_file));
 				i++;
 			}
 			redirect = redirect->next;
@@ -102,7 +89,8 @@ bool	redirect_in_out(t_redirect *redirect)
 			return (ft_putstr_fd("FILE ERROR", 2), false);
 		if (dup2(file, 0) == -1)
 			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
-		return (close(file), true);
+		close(file);
+		return (true);
 	}
 	else if (redirect->type == REDIRECT_OUT)
 	{
@@ -131,11 +119,6 @@ bool	apply_redirection(t_cmd *cmd)
 		else if (temp->type == APPEND)
 		{
 			if (redirect_append(temp) == false)
-				return (false);
-		}
-		else if (temp->type == HERE_DOC)
-		{
-			if (redirect_here_doc(temp) == false)
 				return (false);
 		}
 		else
