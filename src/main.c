@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:04:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 23:32:55 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	routine(t_shell *shell, char *input)
 		shell->token = lexer(input);
 		if (shell->token)
 		{
-			shell->cmd = parser(shell->token, 0);
+			shell->cmd = parser(shell->token, 0, NULL);
 			if (shell->cmd)
 			{
 				(expand_varialbes(shell->cmd, shell, 0));

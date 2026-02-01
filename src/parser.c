@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 11:52:29 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:19:38 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 23:33:07 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,8 @@ int	parser_compare(t_token *temp, t_cmd **cmd_list, t_cmd **new)
 	return (2);
 }
 
-t_cmd	*parser(t_token *token, int result)
+t_cmd	*parser(t_token *token, int result, t_token	*temp)
 {
-	t_token	*temp;
 	t_cmd	*new;
 	t_cmd	*cmd_list;
 
@@ -89,7 +88,8 @@ t_cmd	*parser(t_token *token, int result)
 	{
 		result = parser_compare(temp, &cmd_list, &new);
 		if (result == -1)
-			return (free(new), ft_putendl_fd("unexpected element", 2), NULL);
+			return (ft_cmddestroy(&new),
+				ft_putendl_fd("unexpected element", 2), NULL);
 		else if (result == 0)
 		{
 			new = ft_cmdnew();

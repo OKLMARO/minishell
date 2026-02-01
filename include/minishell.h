@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 21:05:59 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 23:32:39 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	ft_tokendestroy(t_token **lst);
 void	get_clean_status(t_shell *shell);
 void	do_heredoc(t_shell *shell, int i);
 void	remove_env(t_shell *shell, int j);
-t_cmd	*parser(t_token *token, int result);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
@@ -116,6 +115,7 @@ int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);
 int		redirect_out(char **args, int i, t_list *list);
 int		builtin_export(t_cmd *cmd, t_shell *shell, int i);
+t_cmd	*parser(t_token *token, int result, t_token	*temp);
 void	my_exit(t_cmd **cmd, t_token **token, char *string);
 int		builtin_exit(t_cmd *cmd, t_shell *shell, char **path);
 bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path);
