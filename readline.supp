@@ -1,0 +1,20 @@
+{
+   ignore_readline_leaks
+   Memcheck:Leak
+   ...
+   obj:*/libreadline.so.*
+}
+
+{
+   ignore_readline_add_history
+   Memcheck:Leak
+   ...
+   fun:add_history
+}
+
+{
+   ignore_readline_using_history
+   Memcheck:Leak
+   ...
+   fun:using_history
+}
