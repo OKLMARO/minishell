@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 20:38:12 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/01 22:51:48 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	exec_shell(t_shell *shell)
 	char	**path;
 	pid_t	pid;
 
-	if (!shell->cmd)
+	if (!shell->cmd || !shell->cmd->argv || !shell->cmd->argv[0])
 		return ;
 	path = get_path(shell->env);
 	if (!path)
