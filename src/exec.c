@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 00:00:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/02 16:32:04 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,18 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
 			(free_double(path), ft_putstr_fd("COMMAND NOT FOUND\n", 2));
 			return (delete_shell(shell), exit(127));
 		}
-		execve(command, cmd->argv, shell->env);
-		ft_putstr_fd("EXEC ERROR", 2);
+		(execve(command, cmd->argv, shell->env), ft_putstr_fd("EXEC ERROR", 2));
 		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
 		(delete_shell(shell), free_double(path), free(command), exit(127));
 	}
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+	{
+		if (path)
+			free_double(path);
+		(delete_shell(shell), exit(0));
+	}
+	if (!path)
+		(delete_shell(shell), exit(127));
 }
 
 void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
@@ -118,11 +125,7 @@ void	exec_shell(t_shell *shell)
 	char	**path;
 	pid_t	pid;
 
-	if (!shell->cmd || !shell->cmd->argv || !shell->cmd->argv[0])
-		return ;
 	path = get_path(shell->env);
-	if (!path)
-		return (ft_putendl_fd("ENV ERROR", 2));
 	if (!shell->cmd->next)
 	{
 		if (builtin_exec(shell, shell->cmd, path) == false)
@@ -138,5 +141,6 @@ void	exec_shell(t_shell *shell)
 	}
 	else
 		pipex(shell, path, shell->exit_status);
-	free_double(path);
+	if (path)
+		free_double(path);
 }
