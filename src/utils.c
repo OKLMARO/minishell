@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:52:13 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 00:01:04 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/02 16:37:32 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,11 @@ int	ft_strlenlen(char **lst)
 	while (lst[i])
 		i++;
 	return (i);
+}
+
+void	wait_and_sig(pid_t pid, t_shell *shell)
+{
+	signal(SIGINT, sigchild);
+	waitpid(pid, &shell->raw_statuts, 0);
+	signal(SIGINT, sigint_handler);
 }

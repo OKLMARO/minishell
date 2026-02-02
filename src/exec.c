@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 16:32:04 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/02 16:39:04 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 		(free_double(path), delete_shell(shell), exit(status));
 	}
 	close(pipe_out);
-	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
+	(wait_and_sig(pid, shell), get_clean_status(shell));
 }
 
 void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
@@ -89,7 +89,7 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 		pipex_out(cmd->next, path, shell, pip[0]);
 	else
 		pipex_mid(cmd->next, path, shell, pip[0]);
-	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
+	(wait_and_sig(pid, shell), get_clean_status(shell));
 }
 
 void	pipex(t_shell *shell, char **path, int status)
@@ -117,7 +117,7 @@ void	pipex(t_shell *shell, char **path, int status)
 		pipex_out(shell->cmd->next, path, shell, pip[0]);
 	else
 		pipex_mid(shell->cmd->next, path, shell, pip[0]);
-	(waitpid(pid, &shell->raw_statuts, 0), get_clean_status(shell));
+	(wait_and_sig(pid, shell), get_clean_status(shell));
 }
 
 void	exec_shell(t_shell *shell)
@@ -135,8 +135,7 @@ void	exec_shell(t_shell *shell)
 				return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
 			else if (pid == 0)
 				simple_exec(shell, path, shell->cmd);
-			(signal(SIGINT, sigchild), waitpid(pid, &shell->raw_statuts, 0));
-			(signal(SIGINT, sigint_handler), get_clean_status(shell));
+			(wait_and_sig(pid, shell), get_clean_status(shell));
 		}
 	}
 	else

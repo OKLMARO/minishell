@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:55:45 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/02 16:37:54 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void	ft_redirectdestroy(t_redirect **lst);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
+void	wait_and_sig(pid_t pid, t_shell *shell);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
