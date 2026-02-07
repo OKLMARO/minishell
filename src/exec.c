@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:49:42 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 15:42:02 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd, char *command)
 			ft_putstr_fd("COMMAND NOT FOUND\n", 2);
 			return (delete_shell(shell, path), exit(127));
 		}
-		(execve(command, cmd->argv, shell->env), ft_putstr_fd("EXEC ERROR", 2));
-		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
+		execve(command, cmd->argv, shell->env);
+		ft_putendl_fd("EXEC ERROR", 2);
 		(delete_shell(shell, path), free(command), exit(127));
 	}
 	if (!cmd || !cmd->argv || !cmd->argv[0])
@@ -47,12 +47,12 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 
 	pid = fork();
 	if (pid == -1)
-		return (ft_putstr_fd("FORK ERROR", 2));
+		return (ft_putstr_fd("FORK ERROR\n", 2));
 	else if (pid == 0)
 	{
 		status = shell->exit_status;
 		if (dup2(pipe_out, 0) == -1)
-			(ft_putstr_fd("PIPE ERROR", 2), close(pipe_out), exit(2));
+			(ft_putstr_fd("PIPE ERROR\n", 2), close(pipe_out), exit(2));
 		close(pipe_out);
 		if (builtin_exec(shell, cmd, path) == false)
 			simple_exec(shell, path, cmd, NULL);
@@ -69,15 +69,15 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 	int		status;
 
 	if (pipe(pip) == -1)
-		return (ft_putstr_fd("PIPE ERROR", 2));
+		return (ft_putstr_fd("PIPE ERROR\n", 2));
 	pid = fork();
 	if (pid == -1)
-		return (ft_putstr_fd("FORK ERROR", 2));
+		return (ft_putstr_fd("FORK ERROR\n", 2));
 	else if (pid == 0)
 	{
 		status = shell->exit_status;
 		if (dup2(pip_in, 0) == -1 || dup2(pip[1], 1) == -1)
-			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
+			(ft_putstr_fd("PIPE ERROR\n", 2), close(pip[0]), exit(2));
 		(close(pip[0]), close(pip[1]), close(pip_in));
 		if (builtin_exec(shell, cmd, path) == false)
 			simple_exec(shell, path, cmd, NULL);
@@ -97,14 +97,14 @@ void	pipex(t_shell *shell, char **path, int status)
 	int		pip[2];
 
 	if (pipe(pip) == -1)
-		return (ft_putstr_fd("PIPE ERROR", 2));
+		return (ft_putstr_fd("PIPE ERROR\n", 2));
 	pid = fork();
 	if (pid == -1)
-		return (close(pip[0]), close(pip[1]), ft_putstr_fd("FORK ERROR", 2));
+		return (close(pip[0]), close(pip[1]), ft_putstr_fd("FORK ERROR\n", 2));
 	else if (pid == 0)
 	{
 		if (dup2(pip[1], 1) == -1)
-			(ft_putstr_fd("DUP2 ERROR", 2), close(pip[0]), close(pip[1]),
+			(ft_putstr_fd("DUP2 ERROR\n", 2), close(pip[0]), close(pip[1]),
 				exit(2));
 		(close(pip[0]), close(pip[1]));
 		if (builtin_exec(shell, shell->cmd, path) == false)
@@ -131,7 +131,7 @@ void	exec_shell(t_shell *shell)
 		{
 			pid = fork();
 			if (pid == -1)
-				return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
+				return (ft_putstr_fd("FORK ERROR\n", 2), free_double(path));
 			else if (pid == 0)
 				simple_exec(shell, path, shell->cmd, NULL);
 			(wait_and_sig(pid, shell), get_clean_status(shell));

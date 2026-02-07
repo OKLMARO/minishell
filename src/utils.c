@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:52:13 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:49:02 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:54:22 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int	ft_strlenlen(char **lst)
 void	wait_and_sig(pid_t pid, t_shell *shell)
 {
 	signal(SIGINT, sigchild);
+	signal(SIGQUIT, sigquit_handler2);
 	waitpid(pid, &shell->raw_statuts, 0);
 	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

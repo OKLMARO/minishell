@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:35:38 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 15:07:12 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell, char **path)
 		if (cmd->argv[2])
 			return (ft_putendl_fd("too many arg", 2), 1);
 		exit_value = ft_atoi(cmd->argv[1]);
+		if (exit_value == -1)
+			exit_value = 2;
 		free_double(path);
 		delete_shell(shell, NULL);
 		exit(exit_value);

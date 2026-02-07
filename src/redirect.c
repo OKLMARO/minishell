@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:39:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:29:25 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 15:42:59 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ bool	redirect_append(t_redirect *redirect)
 
 	file = open(redirect->file, O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (file < 0)
-		return (ft_putstr_fd("FILE ERROR", 2), false);
+		return (ft_putstr_fd("FILE ERROR\n", 2), false);
 	if (dup2(file, 1) == -1)
-		return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
+		return (close(file), ft_putstr_fd("REDIRECT ERROR\n", 2), false);
 	return (close(file), true);
 }
 
@@ -86,9 +86,9 @@ bool	redirect_in_out(t_redirect *redirect)
 	{
 		file = open(redirect->file, O_RDONLY);
 		if (file < 0)
-			return (ft_putstr_fd("FILE ERROR", 2), false);
+			return (ft_putstr_fd("FILE ERROR\n", 2), false);
 		if (dup2(file, 0) == -1)
-			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
+			return (close(file), ft_putstr_fd("REDIRECT ERROR\n", 2), false);
 		close(file);
 		return (true);
 	}
@@ -96,9 +96,9 @@ bool	redirect_in_out(t_redirect *redirect)
 	{
 		file = open(redirect->file, O_WRONLY | O_TRUNC | O_CREAT, 0777);
 		if (file < 0)
-			return (ft_putstr_fd("FILE ERROR", 2), false);
+			return (ft_putstr_fd("FILE ERROR\n", 2), false);
 		if (dup2(file, 1) == -1)
-			return (close(file), ft_putstr_fd("REDIRECT ERROR", 2), false);
+			return (close(file), ft_putstr_fd("REDIRECT ERROR\n", 2), false);
 		return (close(file), true);
 	}
 	return (false);
@@ -122,7 +122,7 @@ bool	apply_redirection(t_cmd *cmd)
 				return (false);
 		}
 		else
-			return (ft_putstr_fd("REDIRECT ERROR", 2), false);
+			return (ft_putstr_fd("REDIRECT ERROR\n", 2), false);
 		temp = temp->next;
 	}
 	return (true);

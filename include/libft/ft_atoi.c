@@ -32,25 +32,18 @@ int	is_good(char str)
 int	ft_atoi(const char *nptr)
 {
 	int	i;
-	int	is_negative;
 	int	res;
 
 	i = 0;
-	is_negative = 1;
 	res = 0;
-	while (is_good(nptr[i]) == 1 && nptr[i] != '\0')
-		i = i + 1;
-	if (nptr[i] == '-' || nptr[i] == '+')
-	{
-		if (nptr[i] == '-')
-			is_negative = is_negative * -1;
-		i++;
-	}
+	if (ft_isdigit(nptr[i]) == 0)
+		return (-1);
 	while (nptr[i] != '\0' && (nptr[i] >= '0' && nptr[i] <= '9'))
 	{
 		res = res * 10 + (nptr[i] - '0');
 		i = i + 1;
 	}
-	res = res * is_negative;
+	if (ft_isdigit(nptr[i]) == 0)
+		return (-1);
 	return (res);
 }

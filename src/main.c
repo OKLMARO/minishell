@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:32:30 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 15:42:11 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **env)
 	(signal(SIGQUIT, SIG_IGN), signal(SIGINT, sigint_handler));
 	shell = make_shell();
 	if (!shell)
-		return (ft_putstr_fd("MALLOC SHELL STRUCT ERROR", 2), 1);
+		return (ft_putstr_fd("MALLOC SHELL STRUCT ERROR\n", 2), 1);
 	if (copy_env_in_shell(shell, env) == false)
 		return (free(shell), ft_putendl_fd("ENV COPY ERROR", 2), 1);
 	while (1)

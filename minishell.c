@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:45:34 by oamairi           #+#    #+#             */
-/*   Updated: 2025/12/03 16:29:17 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 15:39:21 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv, char **env)
 	init_token(&token);
 	path = get_path(env);
 	if (!path)
-		return (ft_putstr_fd("Env error", 2), 2);
+		return (ft_putendl_fd("Env error", 2), 2);
 	while ((input = readline("minishell $>")))
 	{
 		if (!input)
