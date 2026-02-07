@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 17:03:07 by oamairi           #+#    #+#             */
-/*   Updated: 2026/01/31 11:43:28 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:29:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ bool	copy_env_in_shell(t_shell *shell, char **env)
 	return (true);
 }
 
-void	delete_shell(t_shell *shell)
+void	delete_shell(t_shell *shell, char **path)
 {
+	if (path)
+		free_double(path);
 	if (shell->cmd)
 		ft_cmddestroy(&shell->cmd);
 	if (shell->token)

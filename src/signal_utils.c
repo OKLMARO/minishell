@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 23:54:11 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:55:34 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:45:00 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ void	sigint_handler2(int signo)
 void	sigquit_handler2(int signo)
 {
 	(void)signo;
-	write(2, "Quit (core dumped)", 19);
-	write(2, "\n", 1);
+	ft_putendl_fd("quit (core dumped)", 2);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 }

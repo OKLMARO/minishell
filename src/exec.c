@@ -6,39 +6,38 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 16:39:04 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:49:42 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	simple_exec(t_shell *shell, char **path, t_cmd *cmd)
+void	simple_exec(t_shell *shell, char **path, t_cmd *cmd, char *command)
 {
-	char	*command;
-
+	signal(SIGQUIT, sigquit_handler2);
 	if (apply_redirection(cmd) == false)
-		(ft_putstr_fd("REDIRECT ERROR\n", 2), exit(2));
-	if (cmd && cmd->argv && cmd->argv[0] && path)
+		(ft_putendl_fd("REDIRECT ERR", 2), delete_shell(shell, path), exit(2));
+	if (cmd && cmd->argv && cmd->argv[0])
 	{
 		command = valid_command(cmd->argv[0], path);
 		if (!command)
 		{
-			(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
-			(free_double(path), ft_putstr_fd("COMMAND NOT FOUND\n", 2));
-			return (delete_shell(shell), exit(127));
+			(execve(cmd->argv[0], cmd->argv, shell->env));
+			ft_putstr_fd("COMMAND NOT FOUND\n", 2);
+			return (delete_shell(shell, path), exit(127));
 		}
 		(execve(command, cmd->argv, shell->env), ft_putstr_fd("EXEC ERROR", 2));
 		(ft_cmddestroy(&shell->cmd), ft_tokendestroy(&shell->token));
-		(delete_shell(shell), free_double(path), free(command), exit(127));
+		(delete_shell(shell, path), free(command), exit(127));
 	}
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 	{
 		if (path)
 			free_double(path);
-		(delete_shell(shell), exit(0));
+		(delete_shell(shell, NULL), exit(0));
 	}
 	if (!path)
-		(delete_shell(shell), exit(127));
+		(delete_shell(shell, NULL), exit(127));
 }
 
 void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
@@ -56,8 +55,8 @@ void	pipex_out(t_cmd *cmd, char **path, t_shell *shell, int pipe_out)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pipe_out), exit(2));
 		close(pipe_out);
 		if (builtin_exec(shell, cmd, path) == false)
-			simple_exec(shell, path, cmd);
-		(free_double(path), delete_shell(shell), exit(status));
+			simple_exec(shell, path, cmd, NULL);
+		(free_double(path), delete_shell(shell, NULL), exit(status));
 	}
 	close(pipe_out);
 	(wait_and_sig(pid, shell), get_clean_status(shell));
@@ -81,8 +80,8 @@ void	pipex_mid(t_cmd *cmd, char **path, t_shell *shell, int pip_in)
 			(ft_putstr_fd("PIPE ERROR", 2), close(pip[0]), exit(2));
 		(close(pip[0]), close(pip[1]), close(pip_in));
 		if (builtin_exec(shell, cmd, path) == false)
-			simple_exec(shell, path, cmd);
-		(free_double(path), delete_shell(shell), exit(status));
+			simple_exec(shell, path, cmd, NULL);
+		(free_double(path), delete_shell(shell, NULL), exit(status));
 	}
 	(close(pip[1]), close(pip_in));
 	if (!cmd->next->next)
@@ -109,8 +108,8 @@ void	pipex(t_shell *shell, char **path, int status)
 				exit(2));
 		(close(pip[0]), close(pip[1]));
 		if (builtin_exec(shell, shell->cmd, path) == false)
-			simple_exec(shell, path, shell->cmd);
-		(free_double(path), delete_shell(shell), exit(status));
+			simple_exec(shell, path, shell->cmd, NULL);
+		(free_double(path), delete_shell(shell, NULL), exit(status));
 	}
 	close(pip[1]);
 	if (!shell->cmd->next->next)
@@ -134,7 +133,7 @@ void	exec_shell(t_shell *shell)
 			if (pid == -1)
 				return (ft_putstr_fd("FORK ERROR", 2), free_double(path));
 			else if (pid == 0)
-				simple_exec(shell, path, shell->cmd);
+				simple_exec(shell, path, shell->cmd, NULL);
 			(wait_and_sig(pid, shell), get_clean_status(shell));
 		}
 	}

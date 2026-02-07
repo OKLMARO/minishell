@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 16:37:54 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:31:07 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	exec_shell(t_shell *shell);
 void	sigquit_handler2(int signo);
 void	ft_putnbr_fd(int n, int fd);
 void	free_double(char **tab_str);
-void	delete_shell(t_shell *shell);
 char	*find_first_adr(char *res[]);
 void	ft_putstr_fd(char *s, int fd);
 bool	apply_redirection(t_cmd *cmd);
@@ -111,6 +110,7 @@ void	wait_and_sig(pid_t pid, t_shell *shell);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
+void	delete_shell(t_shell *shell, char **path);
 int		builtin_unset(t_cmd *cmd, t_shell *shell);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);

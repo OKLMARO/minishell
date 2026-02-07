@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 13:34:17 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 23:32:55 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:32:30 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	routine(t_shell *shell, char *input)
 			if (shell->cmd)
 			{
 				(expand_varialbes(shell->cmd, shell, 0));
-				(do_heredoc(shell, 0), exec_shell(shell), free(input));
+				do_heredoc(shell, 0);
+				(exec_shell(shell), free(input));
 			}
 		}
 		if (shell->cmd)
@@ -41,10 +42,10 @@ int	main(int argc, char **argv, char **env)
 	t_shell	*shell;
 
 	((void) argv, (void) argc);
+	(signal(SIGQUIT, SIG_IGN), signal(SIGINT, sigint_handler));
 	shell = make_shell();
 	if (!shell)
 		return (ft_putstr_fd("MALLOC SHELL STRUCT ERROR", 2), 1);
-	(signal(SIGQUIT, SIG_IGN), signal(SIGINT, sigint_handler));
 	if (copy_env_in_shell(shell, env) == false)
 		return (free(shell), ft_putendl_fd("ENV COPY ERROR", 2), 1);
 	while (1)
@@ -58,5 +59,5 @@ int	main(int argc, char **argv, char **env)
 		if (shell->token)
 			ft_tokendestroy(&shell->token);
 	}
-	return (rl_clear_history(), delete_shell(shell), 0);
+	return (rl_clear_history(), delete_shell(shell, NULL), 0);
 }

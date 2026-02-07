@@ -6,13 +6,13 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/01 20:47:30 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:35:38 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	builtin_parsing(t_shell *shell, t_cmd *cmd, char **path)
+bool	builtin_parsing(t_shell *shell, t_cmd *cmd)
 {
 	if (cmd && cmd->argv)
 	{
@@ -29,7 +29,7 @@ bool	builtin_parsing(t_shell *shell, t_cmd *cmd, char **path)
 		else if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
 			return (shell->exit_status = builtin_unset(cmd, shell), true);
 		else if (ft_strncmp(cmd->argv[0], "exit", 5) == 0)
-			return (shell->exit_status = builtin_exit(cmd, shell, path), true);
+			return (true);
 		return (false);
 	}
 	return (false);
@@ -48,12 +48,14 @@ bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path)
 			ft_putendl_fd("dup error", 2), false);
 	if (apply_redirection(cmd) == false)
 		return (close(std_in), close(std_out), false);
-	is_builtin = builtin_parsing(shell, cmd, path);
+	is_builtin = builtin_parsing(shell, cmd);
 	if (dup2(std_in, 0) == -1 || dup2(std_out, 1) == -1)
 		return (close(std_in), close(std_out),
 			ft_putendl_fd("dup2 error", 2), false);
 	close(std_in);
 	close(std_out);
+	if (cmd->argv && ft_strncmp(cmd->argv[0], "exit", 5) == 0)
+		builtin_exit(cmd, shell, path);
 	return (is_builtin);
 }
 
@@ -67,11 +69,11 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell, char **path)
 			return (ft_putendl_fd("too many arg", 2), 1);
 		exit_value = ft_atoi(cmd->argv[1]);
 		free_double(path);
-		delete_shell(shell);
+		delete_shell(shell, NULL);
 		exit(exit_value);
 	}
 	free_double(path);
-	delete_shell(shell);
+	delete_shell(shell, NULL);
 	exit(0);
 	return (0);
 }

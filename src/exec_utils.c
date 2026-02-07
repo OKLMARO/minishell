@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 11:46:38 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/02 00:00:52 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/07 14:27:36 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*valid_command(char *cmd, char **path)
 	valid_cmd = ft_strjoin("/", cmd);
 	if (!valid_cmd)
 		return (NULL);
-	while (path[i])
+	while (path && path[i])
 	{
 		temp = ft_strjoin(path[i], valid_cmd);
 		if (!temp)
