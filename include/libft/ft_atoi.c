@@ -43,7 +43,7 @@ int	ft_atoi(const char *nptr)
 		res = res * 10 + (nptr[i] - '0');
 		i = i + 1;
 	}
-	if (ft_isdigit(nptr[i]) == 0)
+	if (nptr[i] && ft_isdigit(nptr[i]) == 0)
 		return (-1);
 	return (res);
 }
