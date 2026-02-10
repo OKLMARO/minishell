@@ -6,13 +6,52 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:52:13 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:54:22 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 23:17:10 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
 int	g_sv;
+
+void	echo_print(t_cmd *cmd, int i, bool newline)
+{
+	while (cmd->argv[i])
+	{
+		ft_putstr_fd(cmd->argv[i], 1);
+		if (cmd->argv[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+	if (newline)
+		ft_putendl_fd("", 1);
+}
+
+bool	replace_env(t_cmd *cmd, t_shell *shell)
+{
+	int		i;
+	int		j;
+	char	*new_value;
+
+	i = 0;
+	while (shell->env && shell->env[i])
+	{
+		j = 0;
+		while (shell->env[i][j] == cmd->argv[1][j] && cmd->argv[1][j] != '=')
+			j++;
+		if (shell->env[i][j] == '=' && cmd->argv[1][j] == '=')
+		{
+			new_value = ft_strdup(cmd->argv[1]);
+			if (!new_value)
+				return (ft_putendl_fd("malloc failes", 2), true);
+			free(shell->env[i]);
+			shell->env[i] = new_value;
+			return (true);
+		}
+		i++;
+	}
+	return (false);
+}
 
 void	free_double(char **tab_str)
 {

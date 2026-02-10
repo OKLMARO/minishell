@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 20:45:56 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:25:19 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 23:14:43 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,10 @@ int	add_to_env(t_cmd *cmd, t_shell *shell)
 		j = 1;
 		while (cmd->argv[i][j])
 		{
-			if (cmd->argv[i][j] == '=' && cmd->argv[i][j + 1])
+			if (cmd->argv[i][j] == '=')
 			{
+				if (replace_env(cmd, shell) == true)
+					return (0);
 				if (add_env(cmd, shell) == false)
 					return (1);
 			}

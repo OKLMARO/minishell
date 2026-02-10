@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 10:58:20 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 23:15:47 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,14 @@ void	ft_redirectdestroy(t_redirect **lst);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
+bool	replace_env(t_cmd *cmd, t_shell *shell);
 void	wait_and_sig(pid_t pid, t_shell *shell);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
 void	delete_shell(t_shell *shell, char **path);
 int		builtin_unset(t_cmd *cmd, t_shell *shell);
+void	echo_print(t_cmd *cmd, int i, bool newline);
 bool	copy_env_in_shell(t_shell *shell, char **env);
 int		redirect_in(char **args, int i, t_list *list);
 void	ft_tokenadd_back(t_token **lst, t_token *new);

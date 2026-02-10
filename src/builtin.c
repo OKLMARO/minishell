@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/09 15:19:54 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 23:15:06 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,10 @@ int	builtin_exit(t_cmd *cmd, t_shell *shell, char **path)
 			return (ft_putendl_fd("too many arg", 2), 1);
 		exit_value = ft_atoi(cmd->argv[1]);
 		if (exit_value == -1)
+		{
 			exit_value = 2;
+			ft_putendl_fd("arg error", 2);
+		}
 		free_double(path);
 		delete_shell(shell, NULL);
 		exit(exit_value);
@@ -94,25 +97,26 @@ int	builtin_pwd(t_cmd *cmd)
 
 int	builtin_echo(t_cmd *cmd)
 {
-	int	i;
-	int	newline;
+	int		i;
+	bool	newline;
 
 	i = 1;
-	newline = 1;
-	if (cmd->argv[i] && ft_strncmp(cmd->argv[i], "-n",
-			ft_strlen(cmd->argv[i])) == 0)
+	newline = true;
+	if (cmd->argv[1] && cmd->argv[1][0] == '-')
 	{
-		newline = 0;
-		i++;
+		while (cmd->argv[1][i] && cmd->argv[1][i] == 'n')
+		{
+			newline = false;
+			i++;
+		}
+		if (cmd->argv[1][i] && cmd->argv[1][i] != 'n')
+		{
+			newline = true;
+			i = 1;
+		}
+		else
+			i = 2;
 	}
-	while (cmd->argv[i])
-	{
-		ft_putstr_fd(cmd->argv[i], 1);
-		if (cmd->argv[i + 1])
-			ft_putstr_fd(" ", 1);
-		i++;
-	}
-	if (newline)
-		ft_putendl_fd("", 1);
+	echo_print(cmd, i, newline);
 	return (0);
 }
