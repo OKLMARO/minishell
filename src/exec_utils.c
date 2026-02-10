@@ -6,11 +6,20 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 11:46:38 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/09 15:53:16 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 10:29:45 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	simple_exec_no_path(t_shell *shell, t_cmd *cmd, char **path)
+{
+	if (access(cmd->argv[0], X_OK) == -1)
+			(ft_putendl_fd("NA", 2), delete_shell(shell, path), exit(126));
+	execve(cmd->argv[0], cmd->argv, shell->env);
+	ft_putstr_fd("COMMAND NOT FOUND\n", 2);
+	delete_shell(shell, path), exit(127);
+}
 
 char	*valid_command(char *cmd, char **path)
 {
@@ -27,7 +36,7 @@ char	*valid_command(char *cmd, char **path)
 		temp = ft_strjoin(path[i], valid_cmd);
 		if (!temp)
 			return (free(valid_cmd), NULL);
-		if (access(temp, X_OK) == 0)
+		if (access(temp, F_OK) == 0)
 			return (free(valid_cmd), temp);
 		free(temp);
 		i++;

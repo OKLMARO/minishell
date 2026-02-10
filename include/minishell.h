@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/07 14:31:07 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 10:22:31 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ bool	builtin_exec(t_shell *shell, t_cmd *cmd, char **path);
 void	ft_redirectadd_back(t_redirect **lst, t_redirect *new);
 char	*expand_varialbes(t_cmd *cmd_list, t_shell *shell, int i);
 void	make_lexer(t_token_type type, t_token **list, char *buffer);
+void	simple_exec_no_path(t_shell *shell, t_cmd *cmd, char **path);
 t_token	*ft_tokennew(t_token_type type, void *s, t_quote_type quote);
 int		open_redirect_in(char **args, int i, int *file, t_list *list);
 int		open_redirect_out(char **args, int i, int *file, t_list *list);
