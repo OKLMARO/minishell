@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:46:24 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 10:31:18 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 11:17:25 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ void	simple_exec(t_shell *shell, char **path, t_cmd *cmd, char *command)
 		if (!command)
 			simple_exec_no_path(shell, cmd, path);
 		if (access(command, X_OK) == -1)
-			(ft_putendl_fd("NA", 2), delete_shell(shell, path), exit(126));
+		{
+			(perror(command), delete_shell(shell, path));
+			(free(command), exit(126));
+		}
 		(execve(command, cmd->argv, shell->env), ft_putendl_fd("EXEC ERR", 2));
 		(delete_shell(shell, path), free(command), exit(127));
 	}

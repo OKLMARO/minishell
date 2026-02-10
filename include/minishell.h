@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 10:22:31 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/10 10:58:20 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <signal.h>
+# include <errno.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
