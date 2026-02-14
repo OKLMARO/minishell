@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 20:45:56 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 23:14:43 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:07:24 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_env(t_cmd *cmd, t_shell *shell)
 	return (0);
 }
 
-bool	add_env(t_cmd *cmd, t_shell *shell)
+bool	add_env(t_cmd *cmd, t_shell *shell, int i)
 {
 	int		k;
 	char	**new_env;
@@ -43,7 +43,7 @@ bool	add_env(t_cmd *cmd, t_shell *shell)
 			return (free_double(new_env), perror("Malloc error"), false);
 		k++;
 	}
-	new_env[k] = ft_strdup(cmd->argv[1]);
+	new_env[k] = ft_strdup(cmd->argv[i]);
 	new_env[k + 1] = NULL;
 	free_double(shell->env);
 	shell->env = new_env;
@@ -65,10 +65,12 @@ int	add_to_env(t_cmd *cmd, t_shell *shell)
 		{
 			if (cmd->argv[i][j] == '=')
 			{
-				if (replace_env(cmd, shell) == true)
-					return (0);
-				if (add_env(cmd, shell) == false)
-					return (1);
+				if (replace_env(cmd, shell, i) == false)
+				{
+					if (add_env(cmd, shell, i) == false)
+						return (1);
+				}
+				break ;
 			}
 			j++;
 		}

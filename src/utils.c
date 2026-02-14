@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:52:13 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 23:17:10 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:08:14 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	echo_print(t_cmd *cmd, int i, bool newline)
 		ft_putendl_fd("", 1);
 }
 
-bool	replace_env(t_cmd *cmd, t_shell *shell)
+bool	replace_env(t_cmd *cmd, t_shell *shell, int k)
 {
 	int		i;
 	int		j;
@@ -37,11 +37,11 @@ bool	replace_env(t_cmd *cmd, t_shell *shell)
 	while (shell->env && shell->env[i])
 	{
 		j = 0;
-		while (shell->env[i][j] == cmd->argv[1][j] && cmd->argv[1][j] != '=')
+		while (shell->env[i][j] == cmd->argv[k][j] && cmd->argv[k][j] != '=')
 			j++;
-		if (shell->env[i][j] == '=' && cmd->argv[1][j] == '=')
+		if (shell->env[i][j] == '=' && cmd->argv[k][j] == '=')
 		{
-			new_value = ft_strdup(cmd->argv[1]);
+			new_value = ft_strdup(cmd->argv[k]);
 			if (!new_value)
 				return (ft_putendl_fd("malloc failes", 2), true);
 			free(shell->env[i]);
