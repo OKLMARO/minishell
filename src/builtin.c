@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 11:44:37 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/10 23:15:06 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/14 14:49:37 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	builtin_parsing(t_shell *shell, t_cmd *cmd)
 		if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 			return (shell->exit_status = builtin_pwd(cmd), true);
 		else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-			return (shell->exit_status = builtin_echo(cmd), true);
+			return (shell->exit_status = builtin_echo(cmd, 1, 1), true);
 		else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 			return (shell->exit_status = builtin_cd(cmd, shell), true);
 		else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
@@ -95,28 +95,29 @@ int	builtin_pwd(t_cmd *cmd)
 		return (ft_putstr_fd("pwd error\n", 2), 1);
 }
 
-int	builtin_echo(t_cmd *cmd)
+int	builtin_echo(t_cmd *cmd, int i, int j)
 {
-	int		i;
-	bool	newline;
+	int	newline;
 
-	i = 1;
-	newline = true;
-	if (cmd->argv[1] && cmd->argv[1][0] == '-')
+	newline = 1;
+	while (cmd->argv[i] && cmd->argv[i][0] == '-' && cmd->argv[i][1] == 'n')
 	{
-		while (cmd->argv[1][i] && cmd->argv[1][i] == 'n')
-		{
-			newline = false;
-			i++;
-		}
-		if (cmd->argv[1][i] && cmd->argv[1][i] != 'n')
-		{
-			newline = true;
-			i = 1;
-		}
-		else
-			i = 2;
+		j = 1;
+		while (cmd->argv[i][j] == 'n')
+			j++;
+		if (cmd->argv[i][j] != '\0')
+			break ;
+		newline = 0;
+		i++;
 	}
-	echo_print(cmd, i, newline);
+	while (cmd->argv[i])
+	{
+		printf("%s", cmd->argv[i]);
+		if (cmd->argv[i + 1])
+			printf(" ");
+		i++;
+	}
+	if (newline)
+		printf("\n");
 	return (0);
 }

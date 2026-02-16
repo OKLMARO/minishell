@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/01 20:45:56 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/14 14:07:24 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/14 17:47:55 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	builtin_export(t_cmd *cmd, t_shell *shell, int i)
 		i = 0;
 		while (shell->env && shell->env[i])
 		{
-			ft_putendl_fd(shell->env[i], 1);
+			printf("export %s\n", shell->env[i]);
 			i++;
 		}
 		return (0);

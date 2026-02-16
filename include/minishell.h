@@ -6,7 +6,7 @@
 /*   By: oamairi <oamairi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 17:35:58 by oamairi           #+#    #+#             */
-/*   Updated: 2026/02/14 14:07:08 by oamairi          ###   ########.fr       */
+/*   Updated: 2026/02/14 17:56:53 by oamairi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ t_token	*lexer(char *input);
 void	sigchild(int signo);
 char	**get_path(char **env);
 int		builtin_pwd(t_cmd *cmd);
-int		builtin_echo(t_cmd *cmd);
 int		ft_strlenlen(char **lst);
 int		init_token(t_list **list);
 char	*get_user_dir(char **env);
@@ -104,9 +103,11 @@ void	do_heredoc(t_shell *shell, int i);
 void	remove_env(t_shell *shell, int j);
 char	*is_token(t_list *list, char *token);
 void	ft_redirectdestroy(t_redirect **lst);
+char	*get_variables(char *argv, char **env);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 int		builtin_cd(t_cmd *cmd, t_shell *shell);
 char	*valid_command(char *cmd, char **path);
+int		builtin_echo(t_cmd *cmd, int i, int j);
 void	wait_and_sig(pid_t pid, t_shell *shell);
 int		builtin_env(t_cmd *cmd, t_shell *shell);
 void	ft_cmdadd_back(t_cmd **lst, t_cmd *new);
